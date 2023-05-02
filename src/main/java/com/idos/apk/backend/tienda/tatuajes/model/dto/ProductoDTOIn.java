@@ -5,6 +5,5 @@ public record ProductoDTOIn(String nombre,
                             String img,
                             double precio,
                             int cantidad,
-                            String tipo,
-                            Long id) {
+                            String tipo) {
 }
