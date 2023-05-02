@@ -61,4 +61,11 @@ public class ProductoController {
         service.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("Eliminado");
     }
+
+    @GetMapping("/buscar/{id}")
+    public ProductoDTOOut search(@PathVariable("id") Long id){
+        Producto p = service.get(id).get();
+        ProductoDTOOut enviar = mapper.map(p);
+        return enviar;
+    }
 }
