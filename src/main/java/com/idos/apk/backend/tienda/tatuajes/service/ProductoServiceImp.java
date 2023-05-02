@@ -3,6 +3,8 @@ package com.idos.apk.backend.tienda.tatuajes.service;
 import com.idos.apk.backend.tienda.tatuajes.model.Producto;
 import com.idos.apk.backend.tienda.tatuajes.repository.ProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +26,7 @@ public class ProductoServiceImp implements ProductoService {
     }
 
     @Override
-    public Optional<Producto> get(Long id) {
+    public Optional<Producto> get(Long id){
         return repository.findById(id);
     }
 
@@ -42,6 +44,7 @@ public class ProductoServiceImp implements ProductoService {
 
     @Override
     public List<Producto> findAll() {
+
         return repository.findAll();
     }
 }

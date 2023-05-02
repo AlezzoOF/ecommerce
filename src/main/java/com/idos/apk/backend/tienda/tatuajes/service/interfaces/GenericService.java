@@ -1,6 +1,7 @@
 package com.idos.apk.backend.tienda.tatuajes.service.interfaces;
 
 import com.idos.apk.backend.tienda.tatuajes.model.Producto;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
