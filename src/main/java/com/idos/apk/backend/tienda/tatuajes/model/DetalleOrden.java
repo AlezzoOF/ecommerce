@@ -10,7 +10,8 @@ public class DetalleOrden {
     private Long id;
     private int cantidad;
     private double total;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orden_id")
     private Orden orden;
     @OneToOne
     private Producto producto;
@@ -22,6 +23,14 @@ public class DetalleOrden {
         this.id = id;
         this.cantidad = cantidad;
         this.total = total;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
     }
 
     public Long getId() {

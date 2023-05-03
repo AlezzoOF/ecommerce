@@ -1,4 +1,4 @@
-package com.idos.apk.backend.tienda.tatuajes.model.dto;
+package com.idos.apk.backend.tienda.tatuajes.model.dto.producto;
 
 public record ProductoDTOIn(String nombre,
                             String descripcion,

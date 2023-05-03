@@ -16,7 +16,7 @@ public class Producto {
     private int cantidad;
     @Enumerated(EnumType.STRING)
     private TipoProducto tipo;
-    private boolean enable;
+    private boolean enable = true;
 
     public Producto() {
     }

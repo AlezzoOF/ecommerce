@@ -2,6 +2,7 @@ package com.idos.apk.backend.tienda.tatuajes.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,10 +17,11 @@ public class Orden {
     @Column(name = "fecha_creacion")
     private Date fechaCreacion;
     private double total;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "orden")
-    private List<DetalleOrden> detalle;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "orden", orphanRemoval = true)
+    private List<DetalleOrden> detalle = new ArrayList<>();
 
     public Orden() {
     }

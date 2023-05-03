@@ -1,4 +1,4 @@
-package com.idos.apk.backend.tienda.tatuajes.model.dto;
+package com.idos.apk.backend.tienda.tatuajes.model.dto.producto;
 
 import lombok.Data;
 

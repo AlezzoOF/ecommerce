@@ -11,7 +11,16 @@ import java.util.Date;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(ProductoNotFoundException.class)
-    public ResponseEntity<ErrorObject> handelProductoNotFoundException(ProductoNotFoundException ex, WebRequest request){
+    public ResponseEntity<ErrorObject> handelProductoNotFoundException(ProductoNotFoundException ex, WebRequest request) {
+        ErrorObject errorObject = new ErrorObject();
+        errorObject.setStatusCode(HttpStatus.NOT_FOUND.value());
+        errorObject.setMessage(ex.getMessage());
+        errorObject.setTimestamp(new Date());
+
+        return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(OrdenNotFoundException.class)
+    public ResponseEntity<ErrorObject> handlerOrdenNotFoundException(OrdenNotFoundException ex, WebRequest request) {
         ErrorObject errorObject = new ErrorObject();
         errorObject.setStatusCode(HttpStatus.NOT_FOUND.value());
         errorObject.setMessage(ex.getMessage());

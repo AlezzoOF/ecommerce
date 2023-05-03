@@ -2,8 +2,8 @@ package com.idos.apk.backend.tienda.tatuajes.model;
 
 import com.idos.apk.backend.tienda.tatuajes.model.enums.Roles;
 import jakarta.persistence.*;
-import org.aspectj.weaver.ast.Or;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,8 +21,8 @@ public class Usuario {
     private Roles rol;
     private boolean enable;
 
-    @OneToMany(mappedBy = "usuario",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Orden> ordenes;
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Orden> ordenes = new ArrayList<>();
 
 
     public Usuario(Long id, String nombre, String apellido, String direccion, String email, String pwd, Roles rol, boolean enable) {
