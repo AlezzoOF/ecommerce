@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface OrdenService {
     OrdenDtoOut save(OrdenDtoIn objeto);
+
     List<OrdenDtoOut> getAllByUser(Long id);
+
     void delete(Long id);
 }

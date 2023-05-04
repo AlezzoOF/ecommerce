@@ -19,6 +19,7 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(OrdenNotFoundException.class)
     public ResponseEntity<ErrorObject> handlerOrdenNotFoundException(OrdenNotFoundException ex, WebRequest request) {
         ErrorObject errorObject = new ErrorObject();

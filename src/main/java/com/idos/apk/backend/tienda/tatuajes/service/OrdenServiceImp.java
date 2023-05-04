@@ -1,7 +1,6 @@
 package com.idos.apk.backend.tienda.tatuajes.service;
 
 import com.idos.apk.backend.tienda.tatuajes.exceptions.OrdenNotFoundException;
-import com.idos.apk.backend.tienda.tatuajes.model.DetalleOrden;
 import com.idos.apk.backend.tienda.tatuajes.model.Orden;
 import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.detalleorden.DetalleOrdenDto;
@@ -60,7 +59,7 @@ public class OrdenServiceImp implements OrdenService {
 
     @Override
     public void delete(Long id) {
-        Orden nueva = repository.findById(id).orElseThrow(()-> new OrdenNotFoundException("Orden no encontrada"));
+        Orden nueva = repository.findById(id).orElseThrow(() -> new OrdenNotFoundException("Orden no encontrada"));
         repository.deleteById(id);
     }
 }
