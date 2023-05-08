@@ -13,15 +13,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.net.http.HttpRequest;
-import java.security.Security;
 
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
-    private  JWTGenerator jwtGenerator;
+    private JWTGenerator jwtGenerator;
     @Autowired
-    private  CustomUserDetailsService customUserDetailsService;
-
+    private CustomUserDetailsService customUserDetailsService;
 
 
     @Override
@@ -29,20 +26,20 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = getJWTFromRequest(request);
-        if (StringUtils.hasText(token) && jwtGenerator.validateToken(token)){
+        if (StringUtils.hasText(token) && jwtGenerator.validateToken(token)) {
             String username = jwtGenerator.getUsernameFromJwt(token);
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
                     null, userDetails.getAuthorities());
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
-    private String getJWTFromRequest(HttpServletRequest request){
+
+    private String getJWTFromRequest(HttpServletRequest request) {
         String headerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(headerToken) && headerToken.startsWith("Bearer ")){
-            return headerToken.substring(7, headerToken.length());
+        if (StringUtils.hasText(headerToken) && headerToken.startsWith("Bearer ")) {
+            return headerToken.substring(7);
         }
         return null;
     }

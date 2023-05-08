@@ -21,7 +21,7 @@ public class DetalleOrdenController {
     }
 
     @GetMapping("/ver/{id}")
-    public ResponseEntity<List<DetalleOrdenDto>> mostrar(@PathVariable("id") Long id){
+    public ResponseEntity<List<DetalleOrdenDto>> mostrar(@PathVariable("id") Long id) {
         return new ResponseEntity<>(service.getAllByOrden(id), HttpStatus.OK);
     }
 

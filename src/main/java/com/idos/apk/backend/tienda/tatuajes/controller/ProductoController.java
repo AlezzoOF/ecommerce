@@ -39,19 +39,19 @@ public class ProductoController {
         return ResponseEntity.ok(service.getById(id));
     }
 
-    @PutMapping("/{id}/update")
+    @PutMapping("/update/{id}")
     public ResponseEntity<ProductoDTOOut> update(@RequestBody ProductoDTOIn producto, @PathVariable("id") Long id) {
         ProductoDTOOut p = service.update(producto, id);
         return new ResponseEntity<>(p, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") Long id) {
         service.delete(id);
         return new ResponseEntity<>("Producto eliminado", HttpStatus.OK);
     }
 
-    @GetMapping("/mostrar/{filtro}")
+    @GetMapping("/filtro/{filtro}")
     public ResponseEntity<ProductoPageableResponse> findAllByTipo(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,

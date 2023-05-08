@@ -38,6 +38,14 @@ public class UsuarioServiceImp implements UsuarioService {
     }
 
     @Override
+    public void saveUserLikeAdmin(RegisterDto registerDto) {
+        Usuario user = mapper.map(registerDto);
+        Rol rol = rolRepository.findByName("ADMIN").get();
+        user.setRoles(Collections.singletonList(rol));
+        repository.save(user);
+    }
+
+    @Override
     public Optional<Usuario> findByEmail(String email) {
         return repository.findByEmail(email);
     }

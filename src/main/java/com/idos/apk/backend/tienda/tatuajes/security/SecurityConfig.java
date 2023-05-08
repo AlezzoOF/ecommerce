@@ -24,7 +24,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .exceptionHandling()
@@ -34,7 +34,17 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                .requestMatchers("/producto/crear",
+                        "/producto/buscar/**",
+                        "/producto/update/**",
+                        "/producto/delete/**",
+                        "/api/auth/registerAdmin").hasAuthority("ADMIN")
+                .requestMatchers("/producto/filtro/**",
+                        "/producto/mostrar",
+                        "/orden/crear",
+                        "/orden/mostrar",
+                        "/orden/delete").hasAnyAuthority("USER","ADMIN" )
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
@@ -42,17 +52,19 @@ public class SecurityConfig {
         return http.build();
 
     }
+
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
-    public JWTAuthenticationFilter jwtAuthenticationFilter(){
-        return  new JWTAuthenticationFilter();
+    public JWTAuthenticationFilter jwtAuthenticationFilter() {
+        return new JWTAuthenticationFilter();
     }
 }

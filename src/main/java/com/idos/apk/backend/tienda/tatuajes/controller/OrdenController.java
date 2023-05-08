@@ -22,17 +22,17 @@ public class OrdenController {
 
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<OrdenDtoOut> crear(@RequestBody OrdenDtoIn orden){
+    public ResponseEntity<OrdenDtoOut> crear(@RequestBody OrdenDtoIn orden) {
         return new ResponseEntity<>(service.save(orden), HttpStatus.CREATED);
     }
 
     @GetMapping("/mostrar")
-    public ResponseEntity<List<OrdenDtoOut>> mostrar(Long id){
+    public ResponseEntity<List<OrdenDtoOut>> mostrar(Long id) {
         return new ResponseEntity<>(service.getAllByUser(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> delete(Long id){
+    public ResponseEntity<String> delete(Long id) {
         service.delete(id);
 
         return new ResponseEntity<>(HttpStatus.OK);
