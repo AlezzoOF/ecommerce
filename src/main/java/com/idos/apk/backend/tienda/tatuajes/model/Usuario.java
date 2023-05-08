@@ -1,6 +1,5 @@
 package com.idos.apk.backend.tienda.tatuajes.model;
 
-import com.idos.apk.backend.tienda.tatuajes.model.enums.Roles;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -17,23 +16,36 @@ public class Usuario {
     private String direccion;
     private String email;
     private String pwd;
-    @Enumerated(EnumType.STRING)
-    private Roles rol;
+
     private boolean enable;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Orden> ordenes = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "rol_id", referencedColumnName = "id"))
+    private  List<Rol> roles = new ArrayList<>();
 
-    public Usuario(Long id, String nombre, String apellido, String direccion, String email, String pwd, Roles rol, boolean enable) {
+
+    public Usuario(Long id, String nombre, String apellido, String direccion, String email, String pwd, boolean enable, List<Orden> ordenes) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.direccion = direccion;
         this.email = email;
         this.pwd = pwd;
-        this.rol = rol;
         this.enable = enable;
+        this.ordenes = ordenes;
+    }
+
+
+    public List<Rol> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Rol> roles) {
+        this.roles = roles;
     }
 
     public Usuario() {
@@ -87,13 +99,11 @@ public class Usuario {
         this.pwd = pwd;
     }
 
-    public Roles getRol() {
-        return rol;
+    public void  setRol(Rol rol){
+        roles.add(rol);
     }
 
-    public void setRol(Roles rol) {
-        this.rol = rol;
-    }
+
 
     public boolean isEnable() {
         return enable;
@@ -120,7 +130,7 @@ public class Usuario {
                 ", direccion='" + direccion + '\'' +
                 ", email='" + email + '\'' +
                 ", pwd='" + pwd + '\'' +
-                ", rol=" + rol +
+
                 ", enable=" + enable +
                 '}';
     }
