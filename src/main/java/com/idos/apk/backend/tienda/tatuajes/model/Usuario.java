@@ -22,10 +22,8 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Orden> ordenes = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "rol_id", referencedColumnName = "id"))
-    private List<Rol> roles = new ArrayList<>();
+
+    private String rol;
 
 
     public Usuario(Long id, String nombre, String apellido, String direccion, String email, String pwd, boolean enable, List<Orden> ordenes) {
@@ -43,12 +41,12 @@ public class Usuario {
     public Usuario() {
     }
 
-    public List<Rol> getRoles() {
-        return roles;
+    public String getRoles() {
+        return rol;
     }
 
-    public void setRoles(List<Rol> roles) {
-        this.roles = roles;
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 
     public Long getId() {
@@ -99,9 +97,7 @@ public class Usuario {
         this.pwd = pwd;
     }
 
-    public void setRol(Rol rol) {
-        roles.add(rol);
-    }
+
 
 
     public boolean isEnable() {

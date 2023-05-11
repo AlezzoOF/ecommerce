@@ -1,6 +1,5 @@
 package com.idos.apk.backend.tienda.tatuajes.controller;
 
-import com.idos.apk.backend.tienda.tatuajes.model.Rol;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.AuthResponse;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.LoginDto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.RegisterDto;
@@ -62,14 +61,8 @@ public class AuthController {
                         loginDto.pwd()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = generator.generateToken(authentication);
-        List<Rol> rol = service.findByEmail(loginDto.userName()).get().getRoles();
-        List<String> enviar = new ArrayList<>();
-        for (Rol r :
-                rol) {
-            enviar.add(r.getName());
-
-        }
-        return new ResponseEntity<>(new AuthResponse(token, "Bearer", enviar), HttpStatus.OK);
+        String rol = service.findByEmail(loginDto.userName()).get().getRoles();
+        return new ResponseEntity<>(new AuthResponse(token, "Bearer", rol), HttpStatus.OK);
 
     }
 }
