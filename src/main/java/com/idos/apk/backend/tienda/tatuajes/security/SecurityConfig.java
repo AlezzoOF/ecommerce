@@ -44,7 +44,8 @@ public class SecurityConfig {
                         "/producto/mostrar",
                         "/orden/crear",
                         "/orden/mostrar",
-                        "/orden/delete").hasAnyAuthority("USER","ADMIN" )
+                        "/orden/delete",
+                        "/detalle/ver/**").hasAnyAuthority("USER","ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

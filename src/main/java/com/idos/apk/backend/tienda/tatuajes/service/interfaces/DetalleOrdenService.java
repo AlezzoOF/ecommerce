@@ -9,6 +9,6 @@ import java.util.List;
 public interface DetalleOrdenService {
     DetalleOrdenDto save(DetalleOrdenDto objeto, Orden orden, Producto producto);
 
-    List<DetalleOrdenDto> getAllByOrden(Long id);
+    List<DetalleOrdenDto> getAllByOrden(String num);
 
 }

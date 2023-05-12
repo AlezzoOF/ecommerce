@@ -27,8 +27,8 @@ public class OrdenController {
     }
 
     @GetMapping("/mostrar")
-    public ResponseEntity<List<OrdenDtoOut>> mostrar(Long id) {
-        return new ResponseEntity<>(service.getAllByUser(id), HttpStatus.OK);
+    public ResponseEntity<List<OrdenDtoOut>> mostrar(@RequestParam(name = "token") String token) {
+        return new ResponseEntity<>(service.getAllByUser(token), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")

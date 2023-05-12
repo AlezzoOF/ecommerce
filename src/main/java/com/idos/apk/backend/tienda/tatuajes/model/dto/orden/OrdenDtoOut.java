@@ -5,5 +5,5 @@ import com.idos.apk.backend.tienda.tatuajes.model.dto.detalleorden.DetalleOrdenD
 import java.util.Date;
 import java.util.List;
 
-public record OrdenDtoOut(double total, List<DetalleOrdenDto> lista, String numero, Date fechaCreacion) {
+public record OrdenDtoOut(double total, String numero, Date fechaCreacion) {
 }

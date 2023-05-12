@@ -20,9 +20,9 @@ public class DetalleOrdenController {
         this.service = service;
     }
 
-    @GetMapping("/ver/{id}")
-    public ResponseEntity<List<DetalleOrdenDto>> mostrar(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(service.getAllByOrden(id), HttpStatus.OK);
+    @GetMapping("/ver/{num}")
+    public ResponseEntity<List<DetalleOrdenDto>> mostrar(@PathVariable("num") String num) {
+        return new ResponseEntity<>(service.getAllByOrden(num), HttpStatus.OK);
     }
 
 

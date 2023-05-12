@@ -8,7 +8,7 @@ import java.util.List;
 public interface OrdenService {
     OrdenDtoOut save(OrdenDtoIn objeto);
 
-    List<OrdenDtoOut> getAllByUser(Long id);
+    List<OrdenDtoOut> getAllByUser(String token);
 
     void delete(Long id);
 }
