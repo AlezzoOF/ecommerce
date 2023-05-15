@@ -11,7 +11,7 @@ services:
       - DATABASE_URL=jdbc:postgresql://java_db:5432/postgres
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
-    depends_on:
+    links:
       - java_db
   java_db:
     container_name: java_db
