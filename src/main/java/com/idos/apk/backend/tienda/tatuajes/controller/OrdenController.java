@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/orden")
-@CrossOrigin(origins = "*")
 public class OrdenController {
 
     private final OrdenService service;
