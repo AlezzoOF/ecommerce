@@ -13,7 +13,6 @@ public class ProductoDTOInToProducto implements Mapper<ProductoDTOIn, Producto> 
         p.setNombre(in.nombre());
         p.setDescripcion(in.descripcion());
         p.setCantidad(in.cantidad());
-        p.setImg(in.img());
         p.setPrecio(in.precio());
         return p;
     }

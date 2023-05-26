@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/producto")
@@ -20,10 +21,30 @@ public class ProductoController {
 
     }
 
+//    // Guardar la imagen en el servidor
+//    String filename = StringUtils.cleanPath(file.getOriginalFilename());
+//    Path path = Paths.get("./uploads");
+//            if (!Files.exists(path)) {
+//        Files.createDirectories(path);
+//    }
+//    String fileUrl = path.toAbsolutePath() + "/" + filename;
+//            Files.copy(file.getInputStream(), path.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+//
+//    // Crear y guardar el objeto Producto
+//    DescripcionProducto tipoProducto = DescripcionProducto.valueOf(tipo);
+//    Producto producto = new Producto(nombre, precio, fileUrl, tipoProducto);
+//            service.save(producto);
+
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ProductoDTOOut> save(@RequestBody @NotNull ProductoDTOIn producto) {
-        return new ResponseEntity<>(service.save(producto), HttpStatus.CREATED);
+    public ResponseEntity<ProductoDTOOut> save(@RequestParam("nombre") String nombre,
+                                               @RequestParam("descripcion") String descripcion,
+                                               @RequestParam("precio") double precio,
+                                               @RequestParam("cantidad") int cantidad,
+                                               @RequestParam("tipo") String tipo,
+                                               @RequestParam("file") MultipartFile file) {
+        ProductoDTOIn producto = new ProductoDTOIn(nombre, descripcion, precio, cantidad, tipo);
+        return new ResponseEntity<>(service.save(producto, file), HttpStatus.CREATED);
     }
 
     @GetMapping("/mostrar")

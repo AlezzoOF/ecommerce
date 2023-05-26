@@ -16,7 +16,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,8 +46,29 @@ public class ProductoServiceImp implements ProductoService {
 
     //Guardar un producto
     @Override
-    public ProductoDTOOut save(ProductoDTOIn objeto) {
+    public ProductoDTOOut save(ProductoDTOIn objeto, MultipartFile file) {
         Producto p = mapper.map(objeto);
+        String fileUrl = " ";
+        // Guardar la imagen en el servidor
+        try {
+            String filename = StringUtils.cleanPath(file.getOriginalFilename());
+
+            Path path = Paths.get("./uploads");
+            if (!Files.exists(path)) {
+
+                Files.createDirectory(path);
+            }
+            fileUrl = path.toAbsolutePath() + "/" + filename;
+            Files.copy(file.getInputStream(), path.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+        }catch (IOException e){
+            throw new RuntimeException("No ce pudo guardaar la img");
+        }
+
+//        // Crear y guardar el objeto Producto
+//        DescripcionProducto tipoProducto = DescripcionProducto.valueOf(tipo);
+//        Producto producto = new Producto(nombre, precio, fileUrl, tipoProducto);
+//        service.save(producto);
+
         if (tipoProductoRepository.existsByName(objeto.tipo())){
             p.setTipo(tipoProductoRepository.findByName(objeto.tipo()).get());
         }else{
@@ -49,6 +77,7 @@ public class ProductoServiceImp implements ProductoService {
             p.setTipo(tipo);
             tipoProductoRepository.save(tipo);
         }
+        p.setImg(fileUrl);
         repository.save(p);
         ProductoDTOOut enviar = mapper2.map(p);
         return enviar;
