@@ -5,5 +5,6 @@ public record ProductoDTOOut(String nombre,
                              String img,
                              double precio,
                              boolean enable,
+                             int cantidad,
                              Long id) {
 }

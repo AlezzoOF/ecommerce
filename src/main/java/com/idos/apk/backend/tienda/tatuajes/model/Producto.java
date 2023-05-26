@@ -1,10 +1,13 @@
 package com.idos.apk.backend.tienda.tatuajes.model;
 
-import com.idos.apk.backend.tienda.tatuajes.model.enums.TipoProducto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "productos")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Producto {
     @Id
     @GeneratedValue
@@ -14,22 +17,18 @@ public class Producto {
     private String img;
     private double precio;
     private int cantidad;
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "tipoProductoId")
     private TipoProducto tipo;
     private boolean enable = true;
 
-    public Producto() {
+
+    public TipoProducto getTipo() {
+        return tipo;
     }
 
-    public Producto(Long id, String nombre, String descripcion, String img, double precio, int cantidad, TipoProducto tipo, boolean enable) {
-        this.id = id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.img = img;
-        this.precio = precio;
-        this.cantidad = cantidad;
+    public void setTipo(TipoProducto tipo) {
         this.tipo = tipo;
-        this.enable = enable;
     }
 
     public Long getId() {
@@ -81,13 +80,8 @@ public class Producto {
         this.cantidad = cantidad;
     }
 
-    public TipoProducto getTipo() {
-        return tipo;
-    }
 
-    public void setTipo(TipoProducto tipo) {
-        this.tipo = tipo;
-    }
+
 
     public boolean isEnable() {
         return enable;

@@ -1,14 +1,16 @@
 package com.idos.apk.backend.tienda.tatuajes.service;
 
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
+import com.idos.apk.backend.tienda.tatuajes.exceptions.TipoProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.Producto;
+import com.idos.apk.backend.tienda.tatuajes.model.TipoProducto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOIn;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOOut;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoPageableResponse;
-import com.idos.apk.backend.tienda.tatuajes.model.enums.TipoProducto;
 import com.idos.apk.backend.tienda.tatuajes.model.mapper.producto.ProductoDTOInToProducto;
 import com.idos.apk.backend.tienda.tatuajes.model.mapper.producto.ProductoToProductoDTOOut;
 import com.idos.apk.backend.tienda.tatuajes.repository.ProductoRepository;
+import com.idos.apk.backend.tienda.tatuajes.repository.TipoProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,12 +26,14 @@ public class ProductoServiceImp implements ProductoService {
 
     private final ProductoDTOInToProducto mapper;
     private final ProductoToProductoDTOOut mapper2;
+    private final TipoProductoRepository tipoProductoRepository;
 
     private final ProductoRepository repository;
 
-    public ProductoServiceImp(ProductoDTOInToProducto mapper, ProductoToProductoDTOOut mapper2, ProductoRepository repository) {
+    public ProductoServiceImp(ProductoDTOInToProducto mapper, ProductoToProductoDTOOut mapper2, TipoProductoRepository tipoProductoRepository, ProductoRepository repository) {
         this.mapper = mapper;
         this.mapper2 = mapper2;
+        this.tipoProductoRepository = tipoProductoRepository;
         this.repository = repository;
     }
 
@@ -37,6 +41,14 @@ public class ProductoServiceImp implements ProductoService {
     @Override
     public ProductoDTOOut save(ProductoDTOIn objeto) {
         Producto p = mapper.map(objeto);
+        if (tipoProductoRepository.existsByName(objeto.tipo())){
+            p.setTipo(tipoProductoRepository.findByName(objeto.tipo()).get());
+        }else{
+            TipoProducto tipo = new TipoProducto();
+            tipo.setName(objeto.tipo());
+            p.setTipo(tipo);
+            tipoProductoRepository.save(tipo);
+        }
         repository.save(p);
         ProductoDTOOut enviar = mapper2.map(p);
         return enviar;
@@ -91,13 +103,13 @@ public class ProductoServiceImp implements ProductoService {
     @Override
     public ProductoPageableResponse getAllByTipo(int pageNo, int pageSize, String tipo) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        TipoProducto tipoProducto = TipoProducto.valueOf(tipo);
+        TipoProducto tipoProducto = tipoProductoRepository.findByName(tipo).get();
         Page<Producto> lista = repository.findAll(pageable);
         List<Producto> listOfProductos = lista.getContent();
         List<Producto> filtro = new ArrayList<>();
         for (Producto p :
                 listOfProductos) {
-            if (p.getTipo().equals(tipoProducto)) {
+            if (p.getTipo().getName().equals(tipoProducto.getName())) {
                 filtro.add(p);
             }
         }

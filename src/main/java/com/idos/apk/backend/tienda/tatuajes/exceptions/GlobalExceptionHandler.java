@@ -29,4 +29,24 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(TipoProductoNotFoundException.class)
+    public ResponseEntity<ErrorObject> handlerTipoProductoNotFoundException(TipoProductoNotFoundException ex, WebRequest request) {
+        ErrorObject errorObject = new ErrorObject();
+        errorObject.setStatusCode(HttpStatus.NOT_FOUND.value());
+        errorObject.setMessage(ex.getMessage());
+        errorObject.setTimestamp(new Date());
+
+        return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TipoProductoAllReadyExist.class)
+    public ResponseEntity<ErrorObject> handlerTipoProductoAllReadyExist(TipoProductoAllReadyExist ex, WebRequest request) {
+        ErrorObject errorObject = new ErrorObject();
+        errorObject.setStatusCode(HttpStatus.NOT_FOUND.value());
+        errorObject.setMessage(ex.getMessage());
+        errorObject.setTimestamp(new Date());
+
+        return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
+    }
 }

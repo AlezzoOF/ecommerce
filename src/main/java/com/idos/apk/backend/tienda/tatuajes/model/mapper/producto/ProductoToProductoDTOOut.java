@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class ProductoToProductoDTOOut implements Mapper<Producto, ProductoDTOOut> {
     @Override
     public ProductoDTOOut map(Producto in) {
-        ProductoDTOOut p = new ProductoDTOOut(in.getNombre(), in.getDescripcion(), in.getImg(), in.getPrecio(), in.isEnable(), in.getId());
+        ProductoDTOOut p = new ProductoDTOOut(in.getNombre(), in.getDescripcion(), in.getImg(), in.getPrecio(), in.isEnable(), in.getCantidad(), in.getId());
         return p;
     }
 }

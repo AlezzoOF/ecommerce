@@ -1,15 +1,14 @@
-version: '3.9'
+version: '3'
 
 services:
-  java_db:
-    container_name: java_db
+  db:
+#    container_name: postgres-db
     image: postgres
     ports:
-      - "8070:5432"
+      - "5432:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: 54622307
+      POSTGRES_DB: EcommerceTatuajes
     volumes:
       - postgres-data:/var/lib/postgresql/data
 

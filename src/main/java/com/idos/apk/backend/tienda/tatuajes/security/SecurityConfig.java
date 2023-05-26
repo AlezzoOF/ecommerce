@@ -44,6 +44,7 @@ public class SecurityConfig {
                         "/producto/buscar/**",
                         "/producto/update/**",
                         "/producto/delete/**",
+                        "/tp/**",
                         "/api/auth/registerAdmin").hasAuthority("ADMIN")
                 .requestMatchers("/producto/filtro/**",
                         "/producto/mostrar",

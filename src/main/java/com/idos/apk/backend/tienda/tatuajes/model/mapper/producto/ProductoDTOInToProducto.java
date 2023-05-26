@@ -2,7 +2,6 @@ package com.idos.apk.backend.tienda.tatuajes.model.mapper.producto;
 
 import com.idos.apk.backend.tienda.tatuajes.model.Producto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOIn;
-import com.idos.apk.backend.tienda.tatuajes.model.enums.TipoProducto;
 import com.idos.apk.backend.tienda.tatuajes.model.mapper.Mapper;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +15,6 @@ public class ProductoDTOInToProducto implements Mapper<ProductoDTOIn, Producto> 
         p.setCantidad(in.cantidad());
         p.setImg(in.img());
         p.setPrecio(in.precio());
-        p.setTipo(TipoProducto.valueOf(in.tipo()));
         return p;
     }
 }
