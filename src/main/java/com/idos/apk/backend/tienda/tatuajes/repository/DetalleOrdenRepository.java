@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DetalleOrdenRepository extends JpaRepository<DetalleOrden, Long> {
-    List<DetalleOrden> findAllByOrden_id(Long id);
+public interface DetalleOrdenRepository extends JpaRepository<DetalleOrden, String> {
+    List<DetalleOrden> findAllByOrden_id(String id);
 }

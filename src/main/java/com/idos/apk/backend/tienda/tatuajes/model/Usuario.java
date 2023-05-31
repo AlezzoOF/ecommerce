@@ -1,20 +1,34 @@
 package com.idos.apk.backend.tienda.tatuajes.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "usuarios")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Usuario {
     @Id
-    @GeneratedValue
-    private Long id;
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
+    @Column(length = 36, nullable = false, updatable = false)
+    private String id;
+    @Column(nullable = false, length = 100)
     private String nombre;
+    @Column(nullable = false, length = 100)
     private String apellido;
+    @Column(nullable = false, length = 200)
     private String direccion;
+    @Column(unique = true,nullable = false, length = 255)
     private String email;
+    @Column(nullable = false, length = 100)
     private String pwd;
 
     private boolean enable;
@@ -26,107 +40,5 @@ public class Usuario {
     private String rol;
 
 
-    public Usuario(Long id, String nombre, String apellido, String direccion, String email, String pwd, boolean enable, List<Orden> ordenes) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.direccion = direccion;
-        this.email = email;
-        this.pwd = pwd;
-        this.enable = enable;
-        this.ordenes = ordenes;
-    }
 
-
-    public Usuario() {
-    }
-
-    public String getRoles() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPwd() {
-        return pwd;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
-
-
-
-    public boolean isEnable() {
-        return enable;
-    }
-
-    public void setEnable(boolean enable) {
-        this.enable = enable;
-    }
-
-    public List<Orden> getOrdenes() {
-        return ordenes;
-    }
-
-    public void setOrdenes(List<Orden> ordenes) {
-        this.ordenes = ordenes;
-    }
-
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", direccion='" + direccion + '\'' +
-                ", email='" + email + '\'' +
-                ", pwd='" + pwd + '\'' +
-
-                ", enable=" + enable +
-                '}';
-    }
 }

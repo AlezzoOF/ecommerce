@@ -68,7 +68,7 @@ public class OrdenServiceImp implements OrdenService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         Orden nueva = repository.findById(id).orElseThrow(() -> new OrdenNotFoundException("Orden no encontrada"));
         repository.deleteById(id);
     }

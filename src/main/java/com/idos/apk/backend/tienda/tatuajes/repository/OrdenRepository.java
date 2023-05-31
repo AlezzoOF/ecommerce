@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OrdenRepository extends JpaRepository<Orden, Long> {
-    List<Orden> findAllByUsuario_id(Long id);
+public interface OrdenRepository extends JpaRepository<Orden, String> {
+    List<Orden> findAllByUsuario_id(String id);
     Optional<Orden> findByNumero(String num);
 }

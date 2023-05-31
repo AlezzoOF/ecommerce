@@ -38,7 +38,7 @@ public class TipoProductoController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable("id") Long id){
+    public ResponseEntity<String> delete(@PathVariable("id") String id){
         try {
             service.delete(id);
             return new ResponseEntity<>("Borrado", HttpStatus.OK);

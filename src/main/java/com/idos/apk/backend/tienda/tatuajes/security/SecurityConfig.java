@@ -39,15 +39,14 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                .requestMatchers("/api/auth/register", "/producto/mostrar","/producto/filtro/**" ,"/api/auth/login").permitAll()
                 .requestMatchers("/producto/crear",
                         "/producto/buscar/**",
                         "/producto/update/**",
                         "/producto/delete/**",
                         "/tp/**",
                         "/api/auth/registerAdmin").hasAuthority("ADMIN")
-                .requestMatchers("/producto/filtro/**",
-                        "/producto/mostrar",
+                .requestMatchers(
                         "/orden/crear",
                         "/orden/mostrar",
                         "/orden/delete",

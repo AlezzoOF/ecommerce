@@ -7,6 +7,6 @@ import java.util.List;
 public interface TipoProductoService {
     void save(String string);
     List<TipoProducto> findAll();
-    void delete(Long id);
+    void delete(String id);
     boolean ifExist(String s);
 }

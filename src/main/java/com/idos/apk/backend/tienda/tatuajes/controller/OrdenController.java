@@ -33,7 +33,7 @@ public class OrdenController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> delete(Long id) {
+    public ResponseEntity<String> delete(String id) {
         service.delete(id);
 
         return new ResponseEntity<>(HttpStatus.OK);

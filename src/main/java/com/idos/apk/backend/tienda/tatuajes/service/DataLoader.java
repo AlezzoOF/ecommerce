@@ -23,6 +23,9 @@ public class DataLoader {
     private void LoadRoles() {
         if (!usuarioRepository.existsByEmail("admin@admin.com")) {
             Usuario usuario = new Usuario();
+            usuario.setNombre("admin");
+            usuario.setApellido("admin");
+            usuario.setDireccion("admin");
             usuario.setEmail("admin@admin.com");
             usuario.setPwd(passwordEncoder.encode("admin"));
             usuario.setRol("ADMIN");

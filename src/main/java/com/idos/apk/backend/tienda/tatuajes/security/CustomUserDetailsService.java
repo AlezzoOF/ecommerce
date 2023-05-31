@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario user = repository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return new User(user.getEmail(), user.getPwd(), mapRolToAuthorities(user.getRoles()));
+        return new User(user.getEmail(), user.getPwd(), mapRolToAuthorities(user.getRol()));
     }
 
     private Collection<GrantedAuthority> mapRolToAuthorities(String rol) {

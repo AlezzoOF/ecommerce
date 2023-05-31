@@ -10,5 +10,5 @@ public interface OrdenService {
 
     List<OrdenDtoOut> getAllByUser(String token);
 
-    void delete(Long id);
+    void delete(String id);
 }

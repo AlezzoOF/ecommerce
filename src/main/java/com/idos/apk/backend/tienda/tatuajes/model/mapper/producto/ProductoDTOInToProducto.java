@@ -12,8 +12,8 @@ public class ProductoDTOInToProducto implements Mapper<ProductoDTOIn, Producto> 
         Producto p = new Producto();
         p.setNombre(in.nombre());
         p.setDescripcion(in.descripcion());
-        p.setCantidad(in.cantidad());
         p.setPrecio(in.precio());
+        p.setCantidad(in.cantidad());
         return p;
     }
 }

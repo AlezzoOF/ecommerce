@@ -34,7 +34,7 @@ public class TipoProductoServiceImp implements TipoProductoService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         if (repository.existsById(id)){
             repository.deleteById(id);
         }else{

@@ -1,12 +1,10 @@
 package com.idos.apk.backend.tienda.tatuajes.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "tipos")
@@ -15,8 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TipoProducto {
     @Id
-    @GeneratedValue
-    private Long id;
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
+    @Column(length = 36, nullable = false, updatable = false)
+    private String id;
+    @Column(unique = true, nullable = false, length = 100)
     private String name;
 
 }

@@ -12,18 +12,16 @@ import com.idos.apk.backend.tienda.tatuajes.model.mapper.producto.ProductoToProd
 import com.idos.apk.backend.tienda.tatuajes.repository.ProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.repository.TipoProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
+import com.idos.apk.backend.tienda.tatuajes.service.interfaces.StorageService;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,13 +30,15 @@ import java.util.stream.Collectors;
 public class ProductoServiceImp implements ProductoService {
 
     private final ProductoDTOInToProducto mapper;
+    private final StorageService storageService;
     private final ProductoToProductoDTOOut mapper2;
     private final TipoProductoRepository tipoProductoRepository;
 
     private final ProductoRepository repository;
 
-    public ProductoServiceImp(ProductoDTOInToProducto mapper, ProductoToProductoDTOOut mapper2, TipoProductoRepository tipoProductoRepository, ProductoRepository repository) {
+    public ProductoServiceImp(ProductoDTOInToProducto mapper, StorageService storageService, ProductoToProductoDTOOut mapper2, TipoProductoRepository tipoProductoRepository, ProductoRepository repository) {
         this.mapper = mapper;
+        this.storageService = storageService;
         this.mapper2 = mapper2;
         this.tipoProductoRepository = tipoProductoRepository;
         this.repository = repository;
@@ -48,27 +48,8 @@ public class ProductoServiceImp implements ProductoService {
     @Override
     public ProductoDTOOut save(ProductoDTOIn objeto, MultipartFile file) {
         Producto p = mapper.map(objeto);
-        String fileUrl = " ";
-        // Guardar la imagen en el servidor
-        try {
-            String filename = StringUtils.cleanPath(file.getOriginalFilename());
-
-            Path path = Paths.get("./uploads");
-            if (!Files.exists(path)) {
-
-                Files.createDirectory(path);
-            }
-            fileUrl = path.toAbsolutePath() + "/" + filename;
-            Files.copy(file.getInputStream(), path.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
-        }catch (IOException e){
-            throw new RuntimeException("No ce pudo guardaar la img");
-        }
-
-//        // Crear y guardar el objeto Producto
-//        DescripcionProducto tipoProducto = DescripcionProducto.valueOf(tipo);
-//        Producto producto = new Producto(nombre, precio, fileUrl, tipoProducto);
-//        service.save(producto);
-
+        String foto = storageService.store(file);
+        p.setImg(foto);
         if (tipoProductoRepository.existsByName(objeto.tipo())){
             p.setTipo(tipoProductoRepository.findByName(objeto.tipo()).get());
         }else{
@@ -77,11 +58,17 @@ public class ProductoServiceImp implements ProductoService {
             p.setTipo(tipo);
             tipoProductoRepository.save(tipo);
         }
-        p.setImg(fileUrl);
         repository.save(p);
         ProductoDTOOut enviar = mapper2.map(p);
         return enviar;
 
+    }
+
+    @Override
+    public Resource getFoto(String id) {
+        Producto p = repository.findById(id).orElseThrow(()-> new ProductoNotFoundException("Foto no encotrada"));
+
+        return storageService.loadResource(p.getImg());
     }
 
     //mostrar todos los productos
@@ -106,14 +93,14 @@ public class ProductoServiceImp implements ProductoService {
 
     //Buscar Producto por id
     @Override
-    public ProductoDTOOut getById(Long id) {
+    public ProductoDTOOut getById(String id) {
         Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado"));
         return mapper2.map(p);
     }
 
     //Actualizar un producto
     @Override
-    public ProductoDTOOut update(ProductoDTOIn producto, Long id) {
+    public ProductoDTOOut update(ProductoDTOIn producto, String id) {
         Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("Producto no pudo ser editado"));
         Producto guardar = mapper.map(producto);
         guardar.setId(p.getId());
@@ -123,7 +110,7 @@ public class ProductoServiceImp implements ProductoService {
 
     //Borrar producto x id
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("No se pudo eliminar"));
         repository.deleteById(id);
     }
@@ -132,7 +119,7 @@ public class ProductoServiceImp implements ProductoService {
     @Override
     public ProductoPageableResponse getAllByTipo(int pageNo, int pageSize, String tipo) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        TipoProducto tipoProducto = tipoProductoRepository.findByName(tipo).get();
+        TipoProducto tipoProducto = tipoProductoRepository.findByName(tipo).orElseThrow(()->new TipoProductoNotFoundException("NotFoun Tipo"));
         Page<Producto> lista = repository.findAll(pageable);
         List<Producto> listOfProductos = lista.getContent();
         List<Producto> filtro = new ArrayList<>();

@@ -1,4 +1,27 @@
 package com.idos.apk.backend.tienda.tatuajes.model.dto.user;
 
-public record RegisterDto(String userName, String pwd, String nombre, String apellido, String direccion) {
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+public record RegisterDto(@NotNull(message = "No puede ser nulo")
+                          @NotEmpty(message = "No puede ser vacio")
+                          @Size(max = 100, message = "Exedio el tamano max")
+                          String userName,
+                          @NotNull(message = "No puede ser nulo")
+                          @NotEmpty(message = "No puede ser vacio")
+                          @Size(max = 100, message = "Exedio el tamano max")
+                          String pwd,
+                          @NotNull(message = "No puede ser nulo")
+                          @NotEmpty(message = "No puede ser vacio")
+                          @Size(max = 100, message = "Exedio el tamano max")
+                          String nombre,
+                          @NotNull(message = "No puede ser nulo")
+                          @NotEmpty(message = "No puede ser vacio")
+                          @Size(max = 100, message = "Exedio el tamano max")
+                          String apellido,
+                          @NotNull(message = "No puede ser nulo")
+                          @NotEmpty(message = "No puede ser vacio")
+                          @Size(max = 100, message = "Exedio el tamano max")
+                          String direccion) {
 }

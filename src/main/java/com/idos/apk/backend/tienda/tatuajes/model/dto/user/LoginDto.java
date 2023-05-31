@@ -1,4 +1,15 @@
 package com.idos.apk.backend.tienda.tatuajes.model.dto.user;
 
-public record LoginDto(String userName, String pwd) {
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+public record LoginDto(@NotNull(message = "No puede ser nulo")
+                       @NotEmpty(message = "No puede ser vacio")
+                       @Size(max = 100, message = "Exedio el tamano max")
+                       String userName,
+                       @NotNull(message = "No puede ser nulo")
+                       @NotEmpty(message = "No puede ser vacio")
+                       @Size(max = 100, message = "Exedio el tamano max")
+                       String pwd) {
 }

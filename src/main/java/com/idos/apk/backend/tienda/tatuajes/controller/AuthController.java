@@ -58,7 +58,7 @@ public class AuthController {
                         loginDto.pwd()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = generator.generateToken(authentication);
-        String rol = service.findByEmail(loginDto.userName()).get().getRoles();
+        String rol = service.valid(loginDto.userName()).getRol();
         return new ResponseEntity<>(new AuthResponse(token, "Bearer", rol), HttpStatus.OK);
 
     }
