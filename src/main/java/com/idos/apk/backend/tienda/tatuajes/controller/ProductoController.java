@@ -2,8 +2,7 @@ package com.idos.apk.backend.tienda.tatuajes.controller;
 
 
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOIn;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOOut;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoPageableResponse;
+
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -25,20 +24,6 @@ public class ProductoController {
         this.service = service;
 
     }
-
-//    // Guardar la imagen en el servidor
-//    String filename = StringUtils.cleanPath(file.getOriginalFilename());
-//    Path path = Paths.get("./uploads");
-//            if (!Files.exists(path)) {
-//        Files.createDirectories(path);
-//    }
-//    String fileUrl = path.toAbsolutePath() + "/" + filename;
-//            Files.copy(file.getInputStream(), path.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
-//
-//    // Crear y guardar el objeto Producto
-//    DescripcionProducto tipoProducto = DescripcionProducto.valueOf(tipo);
-//    Producto producto = new Producto(nombre, precio, fileUrl, tipoProducto);
-//            service.save(producto);
 
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)

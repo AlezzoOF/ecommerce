@@ -61,6 +61,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
     }
 
+
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorObject> handlerUsernameNotFoundException(UsernameNotFoundException ex, WebRequest request) {
         ErrorObject errorObject = new ErrorObject();

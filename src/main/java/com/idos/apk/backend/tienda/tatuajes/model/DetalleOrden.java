@@ -17,7 +17,9 @@ public class DetalleOrden {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
+    @Column(nullable = false, length = 10)
     private int cantidad;
+    @Column(nullable = false, length = 20)
     private double total;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orden_id")

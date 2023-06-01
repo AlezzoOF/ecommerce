@@ -1,7 +1,7 @@
 package com.idos.apk.backend.tienda.tatuajes.model.dto.producto;
 
 import jakarta.validation.constraints.*;
-import org.springframework.web.multipart.MultipartFile;
+
 
 public record ProductoDTOIn(
                             @NotNull(message = "No puede ser nulo")

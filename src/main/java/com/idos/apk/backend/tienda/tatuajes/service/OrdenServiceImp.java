@@ -46,16 +46,10 @@ public class OrdenServiceImp implements OrdenService {
     @Override
     public OrdenDtoOut save(OrdenDtoIn objeto) {
         Orden nueva = mapper2.map(objeto);
-        nueva.setNumero("1234121515123");
         String email = generator.getUsernameFromJwt(objeto.token());
         nueva.setUsuario(usuarioRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Usuario no valido")));//setear usuario
-        nueva.setFechaCreacion(new Date(System.currentTimeMillis()));
         Orden guardada = repository.save(nueva);
-        for (DetalleOrdenDto d :
-                objeto.lista()) {
-            serviceDetalle.save(d, guardada, productoRepository.findById(d.producto_id()).get());
-        }
-        return mapper.map(nueva);
+        return mapper.map(guardada);
     }
 
     @Override

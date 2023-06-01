@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class OrdenInToOrdenDto implements Mapper<Orden, OrdenDtoOut> {
     @Override
     public OrdenDtoOut map(Orden in) {
-        OrdenDtoOut nueva = new OrdenDtoOut(in.getTotal(), in.getNumero(), in.getFechaCreacion());
+        OrdenDtoOut nueva = new OrdenDtoOut(in.getTotal(), in.getId(), in.getFechaCreacion());
         return nueva;
     }
 }

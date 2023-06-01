@@ -1,9 +1,10 @@
 package com.idos.apk.backend.tienda.tatuajes.model.dto.orden;
 
-import com.idos.apk.backend.tienda.tatuajes.model.dto.detalleorden.DetalleOrdenDto;
 
+
+import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
-public record OrdenDtoOut(double total, String numero, Date fechaCreacion) {
+
+public record OrdenDtoOut(double total, String numero, LocalDate fechaCreacion) {
 }

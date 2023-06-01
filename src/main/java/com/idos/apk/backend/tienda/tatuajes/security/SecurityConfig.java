@@ -50,7 +50,7 @@ public class SecurityConfig {
                         "/orden/crear",
                         "/orden/mostrar",
                         "/orden/delete",
-                        "/detalle/ver/**").hasAnyAuthority("USER","ADMIN")
+                        "/detalle/**").hasAnyAuthority("USER","ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

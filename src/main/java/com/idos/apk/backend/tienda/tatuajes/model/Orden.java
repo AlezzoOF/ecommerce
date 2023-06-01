@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -21,10 +21,10 @@ public class Orden {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
-    private String numero;
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha_creacion")
-    private Date fechaCreacion;
+    private LocalDate fechaCreacion;
+    @Column(nullable = false, length = 20)
     private double total;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
@@ -32,5 +32,10 @@ public class Orden {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "orden", orphanRemoval = true)
     private List<DetalleOrden> detalle = new ArrayList<>();
 
+
+    @PrePersist
+    public void prePersist() {
+        fechaCreacion = LocalDate.now();
+    }
 
 }
