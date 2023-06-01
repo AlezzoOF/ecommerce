@@ -68,7 +68,7 @@ public class ProductoServiceImp implements ProductoService {
     public Resource getFoto(String id) {
         Producto p = repository.findById(id).orElseThrow(()-> new ProductoNotFoundException("Foto no encotrada"));
 
-        return storageService.loadResource(p.getImg());
+        return null;
     }
 
     //mostrar todos los productos
@@ -112,6 +112,7 @@ public class ProductoServiceImp implements ProductoService {
     @Override
     public void delete(String id) {
         Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("No se pudo eliminar"));
+        storageService.loadResource(p.getImg());
         repository.deleteById(id);
     }
 

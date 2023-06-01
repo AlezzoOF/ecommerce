@@ -9,5 +9,5 @@ import java.io.IOException;
 public interface StorageService {
     void init() throws IOException;
     String store(MultipartFile file);
-    Resource loadResource(String filename);
+    void loadResource(String filename);
 }

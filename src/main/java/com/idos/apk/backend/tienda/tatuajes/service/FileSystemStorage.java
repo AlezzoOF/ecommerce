@@ -55,17 +55,12 @@ public class FileSystemStorage implements StorageService {
     }
 
     @Override
-    public Resource loadResource(String filename) {
+    public void loadResource(String filename) {
         try {
             Path file = rootLocation.resolve(filename);
-            Resource resource = new UrlResource(file.toUri());
+            Files.delete(file);
 
-            if (resource.exists() || resource.isReadable()){
-                return resource;
-            }else {
-                throw new RuntimeException("No se encotro el archivo");
-            }
-        }catch (IOException ex){
+        }catch(IOException exe){
             throw new RuntimeException("No se encontro el archivo");
         }
 

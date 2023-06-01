@@ -1,6 +1,7 @@
 package com.idos.apk.backend.tienda.tatuajes.service;
 
 import com.idos.apk.backend.tienda.tatuajes.exceptions.OrdenNotFoundException;
+import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.DetalleOrden;
 import com.idos.apk.backend.tienda.tatuajes.model.Orden;
 import com.idos.apk.backend.tienda.tatuajes.model.Producto;
@@ -31,6 +32,17 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
     @Override
     public DetalleOrdenDto save(DetalleOrdenDto objeto, String orden) {
         DetalleOrden nuevo = new DetalleOrden();
+        Producto producto = productoRepository.findById(objeto.producto_id()).orElseThrow(()->new ProductoNotFoundException("Produto no encontrado"));
+        if(producto.getCantidad() - objeto.cantidad() == 0){
+            producto.setCantidad(0);
+            producto.setEnable(false);
+            productoRepository.save(producto);
+        }else if (producto.getCantidad() - objeto.cantidad() < 0 || objeto.cantidad()<0){
+            throw new ProductoNotFoundException("Cantidad erronea");
+        }else{
+            producto.setCantidad(producto.getCantidad() - objeto.cantidad());
+            productoRepository.save(producto);
+        }
         nuevo.setCantidad(objeto.cantidad());
         nuevo.setTotal(objeto.total());
         nuevo.setProducto(productoRepository.getReferenceById(objeto.producto_id()));

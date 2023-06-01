@@ -1,6 +1,7 @@
 package com.idos.apk.backend.tienda.tatuajes.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ public class Producto {
     @Column(nullable = false, length = 100)
     private double precio;
     @Column(nullable = false, length = 100)
+    @Min(0)
     private int cantidad;
     @ManyToOne
     @JoinColumn(name = "tipoProductoId")
