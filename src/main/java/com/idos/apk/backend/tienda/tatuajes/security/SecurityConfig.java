@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .requestMatchers("/api/auth/register", "/producto/mostrar","/producto/filtro/**" ,"/api/auth/login").permitAll()
+                .requestMatchers("/api/auth/register", "/producto/mostrar", "/producto/filtro/**", "/api/auth/login").permitAll()
                 .requestMatchers("/producto/crear",
                         "/producto/buscar/**",
                         "/producto/update/**",
@@ -50,7 +50,7 @@ public class SecurityConfig {
                         "/orden/crear",
                         "/orden/mostrar",
                         "/orden/delete",
-                        "/detalle/**").hasAnyAuthority("USER","ADMIN")
+                        "/detalle/**").hasAnyAuthority("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
@@ -75,7 +75,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("*"); // Permite todas las origenes, puedes ajustar esto según tus necesidades
         configuration.addAllowedMethod("*"); // Permite todos los métodos HTTP (GET, POST, PUT, DELETE, etc.)

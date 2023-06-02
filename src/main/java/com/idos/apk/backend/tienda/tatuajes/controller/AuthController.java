@@ -11,8 +11,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 
 
 @RestController
@@ -30,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<String> register(@RequestBody @Validated RegisterDto registerDto) {
         if (service.existsByEmail(registerDto.userName())) {
             return new ResponseEntity<>("Hay un usuario registrado con ese email", HttpStatus.BAD_REQUEST);
         }
@@ -41,7 +41,7 @@ public class AuthController {
     }
 
     @PostMapping("/registerAdmin")
-    public ResponseEntity<String> registerAdmin(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<String> registerAdmin(@RequestBody @Validated RegisterDto registerDto) {
         if (service.existsByEmail(registerDto.userName())) {
             return new ResponseEntity<>("Hay un usuario registrado con ese email", HttpStatus.BAD_REQUEST);
         }
@@ -52,7 +52,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<AuthResponse> login(@RequestBody @Validated LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.userName(),
                         loginDto.pwd()));

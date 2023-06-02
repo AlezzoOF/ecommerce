@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class UserInToDtoOut implements Mapper<Usuario, UserDtoOut> {
     @Override
     public UserDtoOut map(Usuario in) {
-        UserDtoOut user = new UserDtoOut(in.getEmail(), in.getNombre(), in.getApellido(),in.getDireccion());
+        UserDtoOut user = new UserDtoOut(in.getEmail(), in.getNombre(), in.getApellido(), in.getDireccion());
         return user;
     }
 }

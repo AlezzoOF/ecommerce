@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, String> {
 //    List<Producto> findAllByTipo(TipoProducto tipo);
+
+
 }

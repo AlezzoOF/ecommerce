@@ -3,7 +3,6 @@ package com.idos.apk.backend.tienda.tatuajes.service;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.OrdenNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.Orden;
 import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.detalleorden.DetalleOrdenDto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoIn;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoOut;
 import com.idos.apk.backend.tienda.tatuajes.model.mapper.orden.OrdenDtoInInToOrden;
@@ -17,7 +16,6 @@ import com.idos.apk.backend.tienda.tatuajes.service.interfaces.OrdenService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,7 +53,7 @@ public class OrdenServiceImp implements OrdenService {
     @Override
     public List<OrdenDtoOut> getAllByUser(String token) {
         String email = generator.getUsernameFromJwt(token);
-        Usuario user= usuarioRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("User not found"));
+        Usuario user = usuarioRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<Orden> lista = repository.findAllByUsuario_id(user.getId());
         List<OrdenDtoOut> enviar = lista.stream().map(p -> mapper.map(p)).collect(Collectors.toList());
         return enviar;

@@ -1,10 +1,10 @@
 package com.idos.apk.backend.tienda.tatuajes.model.dto.user;
 
 public record UserDtoOut(
-                          String userName,
-                          String nombre,
+        String userName,
+        String nombre,
 
-                          String apellido,
+        String apellido,
 
-                          String direccion) {
+        String direccion) {
 }

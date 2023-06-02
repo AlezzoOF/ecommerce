@@ -20,8 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,9 +48,9 @@ public class ProductoServiceImp implements ProductoService {
         Producto p = mapper.map(objeto);
         String foto = storageService.store(file);
         p.setImg(foto);
-        if (tipoProductoRepository.existsByName(objeto.tipo())){
+        if (tipoProductoRepository.existsByName(objeto.tipo())) {
             p.setTipo(tipoProductoRepository.findByName(objeto.tipo()).get());
-        }else{
+        } else {
             TipoProducto tipo = new TipoProducto();
             tipo.setName(objeto.tipo());
             p.setTipo(tipo);
@@ -66,7 +64,7 @@ public class ProductoServiceImp implements ProductoService {
 
     @Override
     public Resource getFoto(String id) {
-        Producto p = repository.findById(id).orElseThrow(()-> new ProductoNotFoundException("Foto no encotrada"));
+        Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("Foto no encotrada"));
 
         return null;
     }
@@ -102,6 +100,7 @@ public class ProductoServiceImp implements ProductoService {
     @Override
     public ProductoDTOOut update(ProductoDTOIn producto, String id) {
         Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("Producto no pudo ser editado"));
+        storageService.loadResource(p.getImg());
         Producto guardar = mapper.map(producto);
         guardar.setId(p.getId());
         repository.save(guardar);
@@ -120,7 +119,7 @@ public class ProductoServiceImp implements ProductoService {
     @Override
     public ProductoPageableResponse getAllByTipo(int pageNo, int pageSize, String tipo) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        TipoProducto tipoProducto = tipoProductoRepository.findByName(tipo).orElseThrow(()->new TipoProductoNotFoundException("NotFoun Tipo"));
+        TipoProducto tipoProducto = tipoProductoRepository.findByName(tipo).orElseThrow(() -> new TipoProductoNotFoundException("NotFoun Tipo"));
         Page<Producto> lista = repository.findAll(pageable);
         List<Producto> listOfProductos = lista.getContent();
         List<Producto> filtro = new ArrayList<>();
@@ -140,6 +139,56 @@ public class ProductoServiceImp implements ProductoService {
         response.setTotalPages(lista.getTotalPages());
         response.setLast(lista.isLast());
 
+
+        return response;
+    }
+
+    @Override
+    public ProductoPageableResponse findAllByEnable(boolean bol, int pageNo, int pageSize) {
+        Pageable pagable = PageRequest.of(pageNo, pageSize);
+        Page<Producto> lista = repository.findAll(pagable);
+        List<Producto> listOfProductos = lista.getContent();
+        List<Producto> filtro = new ArrayList<>();
+        for (Producto p :
+                listOfProductos) {
+            if (p.isEnable()) {
+                filtro.add(p);
+            }
+        }
+        List<ProductoDTOOut> content = filtro.stream().map(p -> mapper2.map(p)).collect(Collectors.toList());
+
+        ProductoPageableResponse response = new ProductoPageableResponse();
+        response.setContent(content);
+        response.setPageNo(lista.getNumber());
+        response.setPageSize(lista.getSize());
+        response.setTotalElements(lista.getTotalElements());
+        response.setTotalPages(lista.getTotalPages());
+        response.setLast(lista.isLast());
+
+        return response;
+    }
+
+    @Override
+    public ProductoPageableResponse findByPrecioBetween(int pageNo, int pageSize, double precioMinimo, double precioMaximo) {
+        Pageable pagable = PageRequest.of(pageNo, pageSize);
+        Page<Producto> lista = repository.findAll(pagable);
+        List<Producto> listOfProductos = lista.getContent();
+        List<Producto> filtro = new ArrayList<>();
+        for (Producto p :
+                listOfProductos) {
+            if (precioMinimo < p.getPrecio() && p.getPrecio() < precioMaximo) {
+                filtro.add(p);
+            }
+        }
+        List<ProductoDTOOut> content = filtro.stream().map(p -> mapper2.map(p)).collect(Collectors.toList());
+
+        ProductoPageableResponse response = new ProductoPageableResponse();
+        response.setContent(content);
+        response.setPageNo(lista.getNumber());
+        response.setPageSize(lista.getSize());
+        response.setTotalElements(lista.getTotalElements());
+        response.setTotalPages(lista.getTotalPages());
+        response.setLast(lista.isLast());
 
         return response;
     }

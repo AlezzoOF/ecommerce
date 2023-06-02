@@ -32,17 +32,23 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
     @Override
     public DetalleOrdenDto save(DetalleOrdenDto objeto, String orden) {
         DetalleOrden nuevo = new DetalleOrden();
-        Producto producto = productoRepository.findById(objeto.producto_id()).orElseThrow(()->new ProductoNotFoundException("Produto no encontrado"));
-        if(producto.getCantidad() - objeto.cantidad() == 0){
+        Producto producto = productoRepository.findById(objeto.producto_id()).orElseThrow(() -> new ProductoNotFoundException("Produto no encontrado"));
+        //Validacion de la entrada de cantidad y vacio de cantidad en el producto
+        if (producto.getCantidad() - objeto.cantidad() == 0) {
             producto.setCantidad(0);
             producto.setEnable(false);
             productoRepository.save(producto);
-        }else if (producto.getCantidad() - objeto.cantidad() < 0 || objeto.cantidad()<0){
+        } else if (producto.getCantidad() - objeto.cantidad() < 0 || objeto.cantidad() < 0) {
             throw new ProductoNotFoundException("Cantidad erronea");
-        }else{
+        } else {
             producto.setCantidad(producto.getCantidad() - objeto.cantidad());
             productoRepository.save(producto);
         }
+        //Validacion del total
+//        if (producto.getPrecio() * objeto.cantidad() == objeto.total()){
+//
+//
+//        }else{throw new OrdenNotFoundException("Total erroneo en una de las ordenes");}
         nuevo.setCantidad(objeto.cantidad());
         nuevo.setTotal(objeto.total());
         nuevo.setProducto(productoRepository.getReferenceById(objeto.producto_id()));
@@ -53,10 +59,10 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
 
     @Override
     public DetalleOrdenDtoOne findOne(String id) {
-        if (!repository.existsById(id)){
+        if (!repository.existsById(id)) {
             throw new OrdenNotFoundException("Detalle not found");
-        }else{
-            DetalleOrden orden = repository.findById(id).orElseThrow(()->new OrdenNotFoundException("Detalle no encontrado"));
+        } else {
+            DetalleOrden orden = repository.findById(id).orElseThrow(() -> new OrdenNotFoundException("Detalle no encontrado"));
             Producto p = orden.getProducto();
             ProductoDTOOut enviar = new ProductoDTOOut(p.getId(), p.getNombre(), p.getDescripcion(), p.getPrecio(), p.getCantidad(), p.getImg());
             DetalleOrdenDtoOne detalle = new DetalleOrdenDtoOne(orden.getCantidad(), enviar, orden.getTotal());
@@ -67,7 +73,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
 
     @Override
     public List<DetalleOrdenDto> getAllByOrden(String num) {
-        Orden orden = ordenRepository.findById(num).orElseThrow(()-> new OrdenNotFoundException("Orden no encontrada"));
+        Orden orden = ordenRepository.findById(num).orElseThrow(() -> new OrdenNotFoundException("Orden no encontrada"));
         List<DetalleOrdenDto> enviar = repository.findAllByOrden_id(orden.getId()).stream().map(p -> mapper(p)).collect(Collectors.toList());
         return enviar;
     }

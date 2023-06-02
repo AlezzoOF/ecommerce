@@ -15,6 +15,7 @@ public class DataLoader {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
     @PostConstruct
     private void LoadData() {
         LoadRoles();

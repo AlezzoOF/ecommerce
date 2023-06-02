@@ -10,8 +10,6 @@ import com.idos.apk.backend.tienda.tatuajes.service.interfaces.UsuarioService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class UsuarioServiceImp implements UsuarioService {
     private final UsuarioRepository repository;
@@ -28,7 +26,7 @@ public class UsuarioServiceImp implements UsuarioService {
 
     @Override
     public void saveUser(RegisterDto registerDto) {
-        if (repository.existsByEmail(registerDto.userName())){
+        if (repository.existsByEmail(registerDto.userName())) {
             throw new UsernameNotFoundException("User already exist");
         }
         Usuario user = mapper.map(registerDto);
@@ -39,7 +37,7 @@ public class UsuarioServiceImp implements UsuarioService {
 
     @Override
     public void saveUserLikeAdmin(RegisterDto registerDto) {
-        if (repository.existsByEmail(registerDto.userName())){
+        if (repository.existsByEmail(registerDto.userName())) {
             throw new UsernameNotFoundException("User already exist");
         }
         Usuario user = mapper.map(registerDto);
@@ -49,18 +47,17 @@ public class UsuarioServiceImp implements UsuarioService {
 
     @Override
     public Usuario valid(String email) {
-        return repository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("user not found"));
+        return repository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 
     @Override
     public UserDtoOut findByEmail(String email) {
-        if (repository.existsByEmail(email)){
-            return mapper2.map(repository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("User not found")));
-        }else{
+        if (repository.existsByEmail(email)) {
+            return mapper2.map(repository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        } else {
             return null;
         }
     }
-
 
 
     @Override

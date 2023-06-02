@@ -19,11 +19,11 @@ public class TipoProductoServiceImp implements TipoProductoService {
 
     @Override
     public void save(String string) {
-        if(!repository.existsByName(string)){
+        if (!repository.existsByName(string)) {
             TipoProducto tipo = new TipoProducto();
             tipo.setName(string);
             repository.save(tipo);
-        }else{
+        } else {
             throw new TipoProductoAllReadyExist("Tipo de producto ya existente");
         }
     }
@@ -35,9 +35,9 @@ public class TipoProductoServiceImp implements TipoProductoService {
 
     @Override
     public void delete(String id) {
-        if (repository.existsById(id)){
+        if (repository.existsById(id)) {
             repository.deleteById(id);
-        }else{
+        } else {
             throw new TipoProductoNotFoundException("TIpo de Producto no encontrado");
         }
 

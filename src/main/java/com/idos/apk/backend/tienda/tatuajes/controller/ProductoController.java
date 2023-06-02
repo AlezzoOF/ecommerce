@@ -2,7 +2,6 @@ package com.idos.apk.backend.tienda.tatuajes.controller;
 
 
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOIn;
-
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -27,25 +26,25 @@ public class ProductoController {
 
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity save(@RequestParam("nombre")  @NotBlank String nombre,
-                                               @RequestParam("descripcion") @NotBlank String descripcion,
-                                               @RequestParam("precio") @Min(0) double precio,
-                                               @RequestParam("cantidad") @Min(0) int cantidad,
-                                               @RequestParam("tipo") @NotBlank String tipo,
-                                               @RequestParam("file") @NotNull MultipartFile file) {
+    public ResponseEntity save(@RequestParam("nombre") @NotBlank String nombre,
+                               @RequestParam("descripcion") @NotBlank String descripcion,
+                               @RequestParam("precio") @Min(0) double precio,
+                               @RequestParam("cantidad") @Min(0) int cantidad,
+                               @RequestParam("tipo") @NotBlank String tipo,
+                               @RequestParam("file") @NotNull MultipartFile file) {
         ProductoDTOIn producto = new ProductoDTOIn(nombre, descripcion, precio, cantidad, tipo);
-        try{
+        try {
             service.save(producto, file);
             return new ResponseEntity<>("Producto creado", HttpStatus.CREATED);
-        }catch (DataAccessException exception){
+        } catch (DataAccessException exception) {
             return new ResponseEntity<>("Error en la conexion con base de datos", HttpStatus.INTERNAL_SERVER_ERROR);
-        }catch (RuntimeException exception){
+        } catch (RuntimeException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/foto/{id}")
-    public Resource foto(@PathVariable("id") String id){
+    public Resource foto(@PathVariable("id") String id) {
         return service.getFoto(id);
     }
 
@@ -56,18 +55,18 @@ public class ProductoController {
     ) {
         try {
             return new ResponseEntity<>(service.getAll(pageNo, pageSize), HttpStatus.OK);
-        }catch (DataAccessException ex){
+        } catch (DataAccessException ex) {
             return new ResponseEntity<>("Error en la conexion con base de datos", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/buscar/{id}")
     public ResponseEntity findOne(@PathVariable("id") String id) {
-        try{
+        try {
             return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
-        }catch (DataAccessException ex){
+        } catch (DataAccessException ex) {
             return new ResponseEntity<>("Error en la conexion con base de datos", HttpStatus.INTERNAL_SERVER_ERROR);
-        }catch (RuntimeException ex){
+        } catch (RuntimeException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
@@ -75,24 +74,24 @@ public class ProductoController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity update(@RequestBody @Validated ProductoDTOIn producto, @PathVariable("id") String id) {
-        try{
+        try {
             service.update(producto, id);
             return new ResponseEntity<>("Producto editado", HttpStatus.OK);
-        }catch (DataAccessException ex){
+        } catch (DataAccessException ex) {
             return new ResponseEntity<>("Error en la conexion con base de datos", HttpStatus.INTERNAL_SERVER_ERROR);
-        }catch (RuntimeException ex){
+        } catch (RuntimeException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity delete(@PathVariable("id") String id) {
-        try{
+        try {
             service.delete(id);
             return new ResponseEntity<>("Producto eliminado", HttpStatus.OK);
-        }catch (DataAccessException ex){
+        } catch (DataAccessException ex) {
             return new ResponseEntity<>("Error en la conexion con base de datos", HttpStatus.INTERNAL_SERVER_ERROR);
-        }catch (RuntimeException ex){
+        } catch (RuntimeException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -103,9 +102,9 @@ public class ProductoController {
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
             @RequestParam String filtro
     ) {
-        try{
+        try {
             return new ResponseEntity<>(service.getAllByTipo(pageNo, pageSize, filtro), HttpStatus.OK);
-        }catch (RuntimeException ex){
+        } catch (RuntimeException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

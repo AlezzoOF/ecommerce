@@ -34,5 +34,4 @@ public class Producto {
     private boolean enable = true;
 
 
-
 }

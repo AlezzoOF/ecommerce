@@ -26,7 +26,7 @@ public class Usuario {
     private String apellido;
     @Column(nullable = false, length = 200)
     private String direccion;
-    @Column(unique = true,nullable = false, length = 255)
+    @Column(unique = true, nullable = false, length = 255)
     private String email;
     @Column(nullable = false, length = 100)
     private String pwd;
@@ -38,7 +38,6 @@ public class Usuario {
 
 
     private String rol;
-
 
 
 }

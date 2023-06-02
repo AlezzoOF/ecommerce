@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ProductoService {
     ProductoDTOOut save(ProductoDTOIn objeto, MultipartFile file);
+
     Resource getFoto(String id);
 
     ProductoPageableResponse getAll(int pageNo, int pageSize);
@@ -19,6 +20,10 @@ public interface ProductoService {
     void delete(String id);
 
     ProductoPageableResponse getAllByTipo(int pageNo, int pageSize, String tipo);
+
+    ProductoPageableResponse findAllByEnable(boolean bol, int pageNo, int pageSize);//Buscar los productos en stock
+
+    ProductoPageableResponse findByPrecioBetween(int pageNo, int pageSize, double precioMinimo, double precioMaximo);
 
 
 }
