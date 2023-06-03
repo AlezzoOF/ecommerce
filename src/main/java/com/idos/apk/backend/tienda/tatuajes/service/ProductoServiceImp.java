@@ -13,6 +13,7 @@ import com.idos.apk.backend.tienda.tatuajes.repository.ProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.repository.TipoProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.StorageService;
+import jakarta.transaction.Transactional;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,21 +45,44 @@ public class ProductoServiceImp implements ProductoService {
 
     //Guardar un producto
     @Override
+    @Transactional
     public ProductoDTOOut save(ProductoDTOIn objeto, MultipartFile file) {
         Producto p = mapper.map(objeto);
+        if (!file.isEmpty()){
         String foto = storageService.store(file);
-        p.setImg(foto);
-        if (tipoProductoRepository.existsByName(objeto.tipo())) {
-            p.setTipo(tipoProductoRepository.findByName(objeto.tipo()).get());
-        } else {
-            TipoProducto tipo = new TipoProducto();
-            tipo.setName(objeto.tipo());
-            p.setTipo(tipo);
-            tipoProductoRepository.save(tipo);
-        }
+        p.setImg(foto);}
+
+        TipoProducto tipo = tipoProductoRepository.findByName(objeto.tipo())
+                .orElseGet(() -> {
+                    TipoProducto newTipo = new TipoProducto();
+                    newTipo.setName(objeto.tipo());
+                    return tipoProductoRepository.save(newTipo);
+                });
+//        if (tipoProductoRepository.existsByName(objeto.tipo())) {
+//            p.setTipo(tipoProductoRepository.findByName(objeto.tipo()).get());
+//        } else {
+//            TipoProducto tipo = new TipoProducto();
+//            tipo.setName(objeto.tipo());
+//            p.setTipo(tipo);
+//            tipoProductoRepository.save(tipo);
+//        }
+        p.setTipo(tipo);
         repository.save(p);
         ProductoDTOOut enviar = mapper2.map(p);
         return enviar;
+
+//        TipoProducto tipo = tipoProductoRepository.findByName(objeto.getTipo())
+//                .orElseGet(() -> {
+//                    TipoProducto newTipo = new TipoProducto();
+//                    newTipo.setName(objeto.getTipo());
+//                    return tipoProductoRepository.save(newTipo);
+//                });
+//        p.setTipo(tipo);
+//
+//        repository.save(p);
+//
+//        ProductoDTOOut enviar = mapper2.map(p);
+//        return enviar;
 
     }
 
@@ -98,6 +122,7 @@ public class ProductoServiceImp implements ProductoService {
 
     //Actualizar un producto
     @Override
+    @Transactional
     public ProductoDTOOut update(ProductoDTOIn producto, String id) {
         Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("Producto no pudo ser editado"));
         storageService.loadResource(p.getImg());

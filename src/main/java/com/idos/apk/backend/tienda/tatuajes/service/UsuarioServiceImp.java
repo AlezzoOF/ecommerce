@@ -7,6 +7,7 @@ import com.idos.apk.backend.tienda.tatuajes.model.mapper.user.RegisterDtoInToUse
 import com.idos.apk.backend.tienda.tatuajes.model.mapper.user.UserInToDtoOut;
 import com.idos.apk.backend.tienda.tatuajes.repository.UsuarioRepository;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.UsuarioService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class UsuarioServiceImp implements UsuarioService {
 
 
     @Override
+    @Transactional
     public void saveUser(RegisterDto registerDto) {
         if (repository.existsByEmail(registerDto.userName())) {
             throw new UsernameNotFoundException("User already exist");
@@ -36,6 +38,7 @@ public class UsuarioServiceImp implements UsuarioService {
     }
 
     @Override
+    @Transactional
     public void saveUserLikeAdmin(RegisterDto registerDto) {
         if (repository.existsByEmail(registerDto.userName())) {
             throw new UsernameNotFoundException("User already exist");

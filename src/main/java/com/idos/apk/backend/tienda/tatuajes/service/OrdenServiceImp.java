@@ -13,6 +13,7 @@ import com.idos.apk.backend.tienda.tatuajes.repository.UsuarioRepository;
 import com.idos.apk.backend.tienda.tatuajes.security.JWTGenerator;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.DetalleOrdenService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.OrdenService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,7 @@ public class OrdenServiceImp implements OrdenService {
 
 
     @Override
+    @Transactional
     public OrdenDtoOut save(OrdenDtoIn objeto) {
         Orden nueva = mapper2.map(objeto);
         String email = generator.getUsernameFromJwt(objeto.token());

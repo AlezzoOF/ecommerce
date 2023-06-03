@@ -26,20 +26,18 @@ public class ProductoController {
 
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity save(@RequestParam("nombre") @NotBlank String nombre,
-                               @RequestParam("descripcion") @NotBlank String descripcion,
-                               @RequestParam("precio") @Min(0) double precio,
-                               @RequestParam("cantidad") @Min(0) int cantidad,
-                               @RequestParam("tipo") @NotBlank String tipo,
-                               @RequestParam("file") @NotNull MultipartFile file) {
+    public ResponseEntity save(@RequestParam("nombre")  String nombre,
+                               @RequestParam("descripcion")  String descripcion,
+                               @RequestParam("precio") double precio,
+                               @RequestParam("cantidad")  int cantidad,
+                               @RequestParam("tipo") String tipo,
+                               @RequestParam("file")  MultipartFile file) {
         ProductoDTOIn producto = new ProductoDTOIn(nombre, descripcion, precio, cantidad, tipo);
         try {
             service.save(producto, file);
             return new ResponseEntity<>("Producto creado", HttpStatus.CREATED);
         } catch (DataAccessException exception) {
             return new ResponseEntity<>("Error en la conexion con base de datos", HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (RuntimeException exception) {
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

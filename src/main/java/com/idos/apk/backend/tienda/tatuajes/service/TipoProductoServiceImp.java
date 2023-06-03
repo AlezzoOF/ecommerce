@@ -5,6 +5,7 @@ import com.idos.apk.backend.tienda.tatuajes.exceptions.TipoProductoNotFoundExcep
 import com.idos.apk.backend.tienda.tatuajes.model.TipoProducto;
 import com.idos.apk.backend.tienda.tatuajes.repository.TipoProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.TipoProductoService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class TipoProductoServiceImp implements TipoProductoService {
     }
 
     @Override
+    @Transactional
     public void save(String string) {
         if (!repository.existsByName(string)) {
             TipoProducto tipo = new TipoProducto();

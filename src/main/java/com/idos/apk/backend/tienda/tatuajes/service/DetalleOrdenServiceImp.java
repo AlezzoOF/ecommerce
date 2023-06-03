@@ -12,6 +12,7 @@ import com.idos.apk.backend.tienda.tatuajes.repository.DetalleOrdenRepository;
 import com.idos.apk.backend.tienda.tatuajes.repository.OrdenRepository;
 import com.idos.apk.backend.tienda.tatuajes.repository.ProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.DetalleOrdenService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
     }
 
     @Override
+    @Transactional
     public DetalleOrdenDto save(DetalleOrdenDto objeto, String orden) {
         DetalleOrden nuevo = new DetalleOrden();
         Producto producto = productoRepository.findById(objeto.producto_id()).orElseThrow(() -> new ProductoNotFoundException("Produto no encontrado"));
