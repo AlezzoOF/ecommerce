@@ -1,5 +1,6 @@
 package com.idos.apk.backend.tienda.tatuajes.controller;
 
+import com.idos.apk.backend.tienda.tatuajes.exceptions.RequestException;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.AuthResponse;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.LoginDto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.RegisterDto;
@@ -30,24 +31,24 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Validated RegisterDto registerDto) {
+    public ResponseEntity register(@RequestBody @Validated RegisterDto registerDto) {
         if (service.existsByEmail(registerDto.userName())) {
-            return new ResponseEntity<>("Hay un usuario registrado con ese email", HttpStatus.BAD_REQUEST);
+            throw new RequestException("Correo en uso", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         service.saveUser(registerDto);
 //        System.out.println(registerDto.nombre());
-        return new ResponseEntity<>("Usuario Creado", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
     @PostMapping("/registerAdmin")
     public ResponseEntity<String> registerAdmin(@RequestBody @Validated RegisterDto registerDto) {
         if (service.existsByEmail(registerDto.userName())) {
-            return new ResponseEntity<>("Hay un usuario registrado con ese email", HttpStatus.BAD_REQUEST);
+            throw new RequestException("Correo en uso", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         service.saveUserLikeAdmin(registerDto);
 //        System.out.println(registerDto.nombre());
-        return new ResponseEntity<>("Usuario Creado", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 

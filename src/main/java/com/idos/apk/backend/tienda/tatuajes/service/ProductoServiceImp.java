@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ProductoServiceImp implements ProductoService {
+public class  ProductoServiceImp implements ProductoService {
 
     private final ProductoDTOInToProducto mapper;
     private final StorageService storageService;
@@ -58,31 +58,10 @@ public class ProductoServiceImp implements ProductoService {
                     newTipo.setName(objeto.tipo());
                     return tipoProductoRepository.save(newTipo);
                 });
-//        if (tipoProductoRepository.existsByName(objeto.tipo())) {
-//            p.setTipo(tipoProductoRepository.findByName(objeto.tipo()).get());
-//        } else {
-//            TipoProducto tipo = new TipoProducto();
-//            tipo.setName(objeto.tipo());
-//            p.setTipo(tipo);
-//            tipoProductoRepository.save(tipo);
-//        }
         p.setTipo(tipo);
         repository.save(p);
         ProductoDTOOut enviar = mapper2.map(p);
         return enviar;
-
-//        TipoProducto tipo = tipoProductoRepository.findByName(objeto.getTipo())
-//                .orElseGet(() -> {
-//                    TipoProducto newTipo = new TipoProducto();
-//                    newTipo.setName(objeto.getTipo());
-//                    return tipoProductoRepository.save(newTipo);
-//                });
-//        p.setTipo(tipo);
-//
-//        repository.save(p);
-//
-//        ProductoDTOOut enviar = mapper2.map(p);
-//        return enviar;
 
     }
 
@@ -125,11 +104,21 @@ public class ProductoServiceImp implements ProductoService {
     @Transactional
     public ProductoDTOOut update(ProductoDTOIn producto, String id) {
         Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("Producto no pudo ser editado"));
-        storageService.loadResource(p.getImg());
-        Producto guardar = mapper.map(producto);
-        guardar.setId(p.getId());
-        repository.save(guardar);
-        return mapper2.map(guardar);
+        TipoProducto tipo = tipoProductoRepository.findByName(producto.tipo())
+                .orElseGet(() -> {
+                    TipoProducto newTipo = new TipoProducto();
+                    newTipo.setName(producto.tipo());
+                    return tipoProductoRepository.save(newTipo);
+                });
+        p.setTipo(tipo);
+        p.setId(id);
+        p.setNombre(producto.nombre());
+        p.setDescripcion(producto.descripcion());
+        p.setCantidad(producto.cantidad());
+        p.setPrecio(producto.precio());
+        repository.save(p);
+        ProductoDTOOut enviar = mapper2.map(p);
+        return enviar;
     }
 
     //Borrar producto x id

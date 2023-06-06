@@ -1,5 +1,6 @@
 package com.idos.apk.backend.tienda.tatuajes.controller;
 
+import com.idos.apk.backend.tienda.tatuajes.exceptions.RequestException;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.detalleorden.DetalleOrdenDto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoIn;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.DetalleOrdenService;
@@ -33,10 +34,8 @@ public class OrdenController {
                 detalleOrdenService.save(detalle, id);
             }
             return new ResponseEntity<>("Orden creada", HttpStatus.CREATED);
-        } catch (DataAccessException ex) {
-            return new ResponseEntity<>("Erro al conectar con la base de datos", HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (RuntimeException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (RuntimeException ex) {
+            throw new RequestException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -44,10 +43,8 @@ public class OrdenController {
     public ResponseEntity mostrar(@RequestParam String token) {
         try {
             return new ResponseEntity<>(service.getAllByUser(token), HttpStatus.OK);
-        } catch (DataAccessException ex) {
-            return new ResponseEntity<>("Erro al conectar con la base de datos", HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (RuntimeException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (RuntimeException ex) {
+            throw new RequestException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -56,10 +53,8 @@ public class OrdenController {
         try {
             service.delete(id);
             return new ResponseEntity<>("Eliminado", HttpStatus.OK);
-        } catch (DataAccessException ex) {
-            return new ResponseEntity<>("Erro al conectar con la base de datos", HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (RuntimeException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (RuntimeException ex) {
+            throw new RequestException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

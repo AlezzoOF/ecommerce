@@ -1,5 +1,6 @@
 package com.idos.apk.backend.tienda.tatuajes.controller;
 
+import com.idos.apk.backend.tienda.tatuajes.exceptions.RequestException;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.TipoProductoAllReadyExist;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.TipoProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.TipoProducto;
@@ -30,10 +31,8 @@ public class TipoProductoController {
         try {
             service.save(string);
             return new ResponseEntity<>("Tipo creado", HttpStatus.CREATED);
-        } catch (TipoProductoAllReadyExist ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
-        } catch (DataAccessException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (RuntimeException ex) {
+            throw new RequestException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -42,10 +41,8 @@ public class TipoProductoController {
         try {
             service.delete(id);
             return new ResponseEntity<>("Borrado", HttpStatus.OK);
-        } catch (TipoProductoNotFoundException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (DataAccessException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (RuntimeException ex) {
+            throw new RequestException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

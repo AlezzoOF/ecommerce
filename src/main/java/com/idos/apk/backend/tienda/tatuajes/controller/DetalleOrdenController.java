@@ -1,5 +1,6 @@
 package com.idos.apk.backend.tienda.tatuajes.controller;
 
+import com.idos.apk.backend.tienda.tatuajes.exceptions.RequestException;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.DetalleOrdenService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -20,10 +21,8 @@ public class DetalleOrdenController {
     public ResponseEntity showOne(@PathVariable("id") String id) {
         try {
             return new ResponseEntity<>(service.findOne(id), HttpStatus.OK);
-        } catch (DataAccessException ex) {
-            return new ResponseEntity<>("Error al conectar con la base de datos", HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (RuntimeException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (RuntimeException ex) {
+            throw new RequestException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -31,10 +30,8 @@ public class DetalleOrdenController {
     public ResponseEntity showAll(@PathVariable("num") String num) {
         try {
             return new ResponseEntity<>(service.getAllByOrden(num), HttpStatus.OK);
-        } catch (DataAccessException ex) {
-            return new ResponseEntity<>("Error al conectar con la base de datos", HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (RuntimeException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (RuntimeException ex) {
+            throw new RequestException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
