@@ -1,6 +1,6 @@
 package com.idos.apk.backend.tienda.tatuajes.service;
 
-import com.idos.apk.backend.tienda.tatuajes.exceptions.TipoProductoAllReadyExist;
+import com.idos.apk.backend.tienda.tatuajes.exceptions.DataAllreadyTaken;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.TipoProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.TipoProducto;
 import com.idos.apk.backend.tienda.tatuajes.repository.TipoProductoRepository;
@@ -20,13 +20,13 @@ public class TipoProductoServiceImp implements TipoProductoService {
 
     @Override
     @Transactional
-    public void save(String string) {
-        if (!repository.existsByName(string)) {
+    public TipoProducto save(String string) throws DataAllreadyTaken {
+        if (repository.existsByName(string)) {
+            throw new DataAllreadyTaken("Allready exist");
+        } else {
             TipoProducto tipo = new TipoProducto();
             tipo.setName(string);
-            repository.save(tipo);
-        } else {
-            throw new TipoProductoAllReadyExist("Tipo de producto ya existente");
+            return repository.save(tipo);
         }
     }
 
@@ -36,7 +36,7 @@ public class TipoProductoServiceImp implements TipoProductoService {
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(String id) throws TipoProductoNotFoundException {
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {

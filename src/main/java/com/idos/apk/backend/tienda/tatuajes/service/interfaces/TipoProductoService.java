@@ -5,7 +5,7 @@ import com.idos.apk.backend.tienda.tatuajes.model.TipoProducto;
 import java.util.List;
 
 public interface TipoProductoService {
-    void save(String string);
+    TipoProducto save(String string);
 
     List<TipoProducto> findAll();
 

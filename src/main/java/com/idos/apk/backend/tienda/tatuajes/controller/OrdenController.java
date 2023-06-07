@@ -1,13 +1,14 @@
 package com.idos.apk.backend.tienda.tatuajes.controller;
 
-import com.idos.apk.backend.tienda.tatuajes.exceptions.RequestException;
+import com.idos.apk.backend.tienda.tatuajes.exceptions.OrdenNotFoundException;
+import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.detalleorden.DetalleOrdenDto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoIn;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.DetalleOrdenService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.OrdenService;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,34 +28,24 @@ public class OrdenController {
 
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity crear(@RequestBody @Validated OrdenDtoIn orden) {
-        try {
-            String id = service.save(orden).numero();
-            for (DetalleOrdenDto detalle : orden.lista()) {
-                detalleOrdenService.save(detalle, id);
-            }
-            return new ResponseEntity<>("Orden creada", HttpStatus.CREATED);
-        }catch (RuntimeException ex) {
-            throw new RequestException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity crear(@RequestBody @Validated OrdenDtoIn orden) throws UsernameNotFoundException, ProductoNotFoundException {
+        String id = service.save(orden).numero();
+        for (DetalleOrdenDto detalle : orden.lista()) {
+            detalleOrdenService.save(detalle, id);
         }
+        return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
 
     @GetMapping("/mostrar")
-    public ResponseEntity mostrar(@RequestParam String token) {
-        try {
-            return new ResponseEntity<>(service.getAllByUser(token), HttpStatus.OK);
-        }catch (RuntimeException ex) {
-            throw new RequestException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity mostrar(@RequestParam String token) throws UsernameNotFoundException {
+        return new ResponseEntity<>(service.getAllByUser(token), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable("id") String id) {
-        try {
-            service.delete(id);
-            return new ResponseEntity<>("Eliminado", HttpStatus.OK);
-        }catch (RuntimeException ex) {
-            throw new RequestException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity delete(@PathVariable("id") String id) throws OrdenNotFoundException {
+        service.delete(id);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+
     }
 }

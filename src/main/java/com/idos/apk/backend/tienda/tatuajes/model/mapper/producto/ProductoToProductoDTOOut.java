@@ -4,7 +4,6 @@ import com.idos.apk.backend.tienda.tatuajes.model.Producto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOOut;
 import com.idos.apk.backend.tienda.tatuajes.model.mapper.Mapper;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Component
 public class ProductoToProductoDTOOut implements Mapper<Producto, ProductoDTOOut> {

@@ -1,5 +1,6 @@
 package com.idos.apk.backend.tienda.tatuajes.service;
 
+import com.idos.apk.backend.tienda.tatuajes.exceptions.DataAllreadyTaken;
 import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.RegisterDto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.UserDtoOut;
@@ -27,9 +28,9 @@ public class UsuarioServiceImp implements UsuarioService {
 
     @Override
     @Transactional
-    public void saveUser(RegisterDto registerDto) {
+    public void saveUser(RegisterDto registerDto) throws DataAllreadyTaken {
         if (repository.existsByEmail(registerDto.userName())) {
-            throw new UsernameNotFoundException("User already exist");
+            throw new DataAllreadyTaken("User already exist");
         }
         Usuario user = mapper.map(registerDto);
         user.setRol("USER");
@@ -39,9 +40,9 @@ public class UsuarioServiceImp implements UsuarioService {
 
     @Override
     @Transactional
-    public void saveUserLikeAdmin(RegisterDto registerDto) {
+    public void saveUserLikeAdmin(RegisterDto registerDto) throws DataAllreadyTaken {
         if (repository.existsByEmail(registerDto.userName())) {
-            throw new UsernameNotFoundException("User already exist");
+            throw new DataAllreadyTaken("User already exist");
         }
         Usuario user = mapper.map(registerDto);
         user.setRol("ADMIN");
@@ -49,17 +50,13 @@ public class UsuarioServiceImp implements UsuarioService {
     }
 
     @Override
-    public Usuario valid(String email) {
+    public Usuario valid(String email) throws UsernameNotFoundException {
         return repository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 
     @Override
-    public UserDtoOut findByEmail(String email) {
-        if (repository.existsByEmail(email)) {
-            return mapper2.map(repository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found")));
-        } else {
-            return null;
-        }
+    public UserDtoOut findByEmail(String email) throws UsernameNotFoundException {
+        return mapper2.map(repository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found")));
     }
 
 

@@ -1,5 +1,6 @@
 package com.idos.apk.backend.tienda.tatuajes.service;
 
+import com.idos.apk.backend.tienda.tatuajes.exceptions.DataAllreadyTaken;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.TipoProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.Producto;
@@ -14,7 +15,6 @@ import com.idos.apk.backend.tienda.tatuajes.repository.TipoProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.StorageService;
 import jakarta.transaction.Transactional;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class  ProductoServiceImp implements ProductoService {
+public class ProductoServiceImp implements ProductoService {
 
     private final ProductoDTOInToProducto mapper;
     private final StorageService storageService;
@@ -46,11 +46,15 @@ public class  ProductoServiceImp implements ProductoService {
     //Guardar un producto
     @Override
     @Transactional
-    public ProductoDTOOut save(ProductoDTOIn objeto, MultipartFile file) {
+    public ProductoDTOOut save(ProductoDTOIn objeto, MultipartFile file) throws DataAllreadyTaken {
+        if (repository.existsByNombre(objeto.nombre())) {
+            throw new DataAllreadyTaken("Name allready exist");
+        }
         Producto p = mapper.map(objeto);
-        if (!file.isEmpty()){
-        String foto = storageService.store(file);
-        p.setImg(foto);}
+        if (!file.isEmpty()) {
+            String foto = storageService.store(file);
+            p.setImg(foto);
+        }
 
         TipoProducto tipo = tipoProductoRepository.findByName(objeto.tipo())
                 .orElseGet(() -> {
@@ -61,15 +65,9 @@ public class  ProductoServiceImp implements ProductoService {
         p.setTipo(tipo);
         repository.save(p);
         ProductoDTOOut enviar = mapper2.map(p);
+
         return enviar;
 
-    }
-
-    @Override
-    public Resource getFoto(String id) {
-        Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("Foto no encotrada"));
-
-        return null;
     }
 
     //mostrar todos los productos
@@ -94,7 +92,7 @@ public class  ProductoServiceImp implements ProductoService {
 
     //Buscar Producto por id
     @Override
-    public ProductoDTOOut getById(String id) {
+    public ProductoDTOOut getById(String id) throws ProductoNotFoundException {
         Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado"));
         return mapper2.map(p);
     }
@@ -102,7 +100,7 @@ public class  ProductoServiceImp implements ProductoService {
     //Actualizar un producto
     @Override
     @Transactional
-    public ProductoDTOOut update(ProductoDTOIn producto, String id) {
+    public ProductoDTOOut update(ProductoDTOIn producto, String id) throws ProductoNotFoundException {
         Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("Producto no pudo ser editado"));
         TipoProducto tipo = tipoProductoRepository.findByName(producto.tipo())
                 .orElseGet(() -> {
@@ -123,7 +121,7 @@ public class  ProductoServiceImp implements ProductoService {
 
     //Borrar producto x id
     @Override
-    public void delete(String id) {
+    public void delete(String id) throws ProductoNotFoundException {
         Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("No se pudo eliminar"));
         storageService.loadResource(p.getImg());
         repository.deleteById(id);

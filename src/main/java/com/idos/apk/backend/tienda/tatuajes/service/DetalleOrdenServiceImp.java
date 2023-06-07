@@ -32,7 +32,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
 
     @Override
     @Transactional
-    public DetalleOrdenDto save(DetalleOrdenDto objeto, String orden) {
+    public DetalleOrdenDto save(DetalleOrdenDto objeto, String orden) throws ProductoNotFoundException {
         DetalleOrden nuevo = new DetalleOrden();
         Producto producto = productoRepository.findById(objeto.producto_id()).orElseThrow(() -> new ProductoNotFoundException("Produto no encontrado"));
         //Validacion de la entrada de cantidad y vacio de cantidad en el producto
@@ -60,7 +60,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
     }
 
     @Override
-    public DetalleOrdenDtoOne findOne(String id) {
+    public DetalleOrdenDtoOne findOne(String id) throws OrdenNotFoundException {
         if (!repository.existsById(id)) {
             throw new OrdenNotFoundException("Detalle not found");
         } else {
@@ -74,7 +74,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
     }
 
     @Override
-    public List<DetalleOrdenDto> getAllByOrden(String num) {
+    public List<DetalleOrdenDto> getAllByOrden(String num) throws OrdenNotFoundException {
         Orden orden = ordenRepository.findById(num).orElseThrow(() -> new OrdenNotFoundException("Orden no encontrada"));
         List<DetalleOrdenDto> enviar = repository.findAllByOrden_id(orden.getId()).stream().map(p -> mapper(p)).collect(Collectors.toList());
         return enviar;

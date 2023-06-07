@@ -5,7 +5,6 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,7 +48,7 @@ public class FileSystemStorage implements StorageService {
 //            String fileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
 //                    .path("/mediafiles/" + fileName) // Ruta relativa a la foto
 //                    .toUriString();
-            return mediaLocation + "/" +fileName;
+            return mediaLocation + "/" + fileName;
         } catch (IOException ex) {
             throw new RuntimeException("Fallo el guardado");
         }

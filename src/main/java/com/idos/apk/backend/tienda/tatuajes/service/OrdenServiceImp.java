@@ -44,7 +44,7 @@ public class OrdenServiceImp implements OrdenService {
 
     @Override
     @Transactional
-    public OrdenDtoOut save(OrdenDtoIn objeto) {
+    public OrdenDtoOut save(OrdenDtoIn objeto) throws UsernameNotFoundException {
         Orden nueva = mapper2.map(objeto);
         String email = generator.getUsernameFromJwt(objeto.token());
         nueva.setUsuario(usuarioRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Usuario no valido")));//setear usuario
@@ -53,7 +53,7 @@ public class OrdenServiceImp implements OrdenService {
     }
 
     @Override
-    public List<OrdenDtoOut> getAllByUser(String token) {
+    public List<OrdenDtoOut> getAllByUser(String token) throws UsernameNotFoundException {
         String email = generator.getUsernameFromJwt(token);
         Usuario user = usuarioRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<Orden> lista = repository.findAllByUsuario_id(user.getId());
@@ -62,7 +62,7 @@ public class OrdenServiceImp implements OrdenService {
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(String id) throws OrdenNotFoundException {
         Orden nueva = repository.findById(id).orElseThrow(() -> new OrdenNotFoundException("Orden no encontrada"));
         repository.deleteById(id);
     }
