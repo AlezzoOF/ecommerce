@@ -34,7 +34,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
     @Transactional
     public DetalleOrdenDto save(DetalleOrdenDto objeto, String orden) throws ProductoNotFoundException {
         DetalleOrden nuevo = new DetalleOrden();
-        Producto producto = productoRepository.findById(objeto.producto_id()).orElseThrow(() -> new ProductoNotFoundException("Produto no encontrado"));
+        Producto producto = productoRepository.findById(objeto.id()).orElseThrow(() -> new ProductoNotFoundException("Produto no encontrado"));
         //Validacion de la entrada de cantidad y vacio de cantidad en el producto
         if (producto.getCantidad() - objeto.cantidad() == 0) {
             producto.setCantidad(0);
@@ -53,7 +53,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
 //        }else{throw new OrdenNotFoundException("Total erroneo en una de las ordenes");}
         nuevo.setCantidad(objeto.cantidad());
         nuevo.setTotal(objeto.total());
-        nuevo.setProducto(productoRepository.getReferenceById(objeto.producto_id()));
+        nuevo.setProducto(productoRepository.getReferenceById(objeto.id()));
         nuevo.setOrden(ordenRepository.getReferenceById(orden));
         repository.save(nuevo);
         return objeto;
@@ -81,7 +81,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
     }
 
     private DetalleOrdenDto mapper(DetalleOrden detalleOrden) {
-        DetalleOrdenDto enviar = new DetalleOrdenDto(detalleOrden.getId(), detalleOrden.getCantidad(), detalleOrden.getProducto().getId(), detalleOrden.getTotal());
+        DetalleOrdenDto enviar = new DetalleOrdenDto(detalleOrden.getCantidad(), detalleOrden.getProducto().getId(), detalleOrden.getTotal());
         return enviar;
     }
 }
