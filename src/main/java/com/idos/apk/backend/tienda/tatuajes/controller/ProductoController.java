@@ -4,7 +4,9 @@ package com.idos.apk.backend.tienda.tatuajes.controller;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.DataAllreadyTaken;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOIn;
+import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOOut;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,9 +18,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductoController {
     private final ProductoService service;
 
-    public ProductoController(ProductoService service) {
+    private final HttpServletRequest request;
+
+    public ProductoController(ProductoService service, HttpServletRequest request) {
         this.service = service;
 
+        this.request = request;
     }
 
     @PostMapping("/crear")
@@ -28,7 +33,9 @@ public class ProductoController {
                                @RequestParam("cantidad") int cantidad,
                                @RequestParam("tipo") String tipo,
                                @RequestParam("file") MultipartFile file) throws DataAllreadyTaken {
+        String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
         ProductoDTOIn producto = new ProductoDTOIn(nombre, descripcion, precio, cantidad, tipo);
+
 
         return new ResponseEntity<>(service.save(producto, file), HttpStatus.CREATED);
 

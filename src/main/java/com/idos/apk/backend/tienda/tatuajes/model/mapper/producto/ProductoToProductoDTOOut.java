@@ -10,11 +10,8 @@ public class ProductoToProductoDTOOut implements Mapper<Producto, ProductoDTOOut
 
     @Override
     public ProductoDTOOut map(Producto in) {
-//        String fileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path("/mediafiles/" + in.getImg()) // Ruta relativa a la foto
-//                .toUriString();
-        ProductoDTOOut p = new ProductoDTOOut(in.getId(), in.getNombre(), in.getDescripcion(), in.getPrecio(), in.getCantidad(), in.getImg());
-        return p;
+
+        return new ProductoDTOOut(in.getId(), in.getNombre(), in.getDescripcion(), in.getPrecio(),in.getTipo().getName() ,in.getCantidad(), in.getImg());
     }
 
 }

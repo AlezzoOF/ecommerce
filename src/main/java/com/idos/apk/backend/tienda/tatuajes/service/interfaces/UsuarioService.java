@@ -4,6 +4,8 @@ import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.RegisterDto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.UserDtoOut;
 
+import java.util.List;
+
 public interface UsuarioService {
     void saveUser(RegisterDto registerDto);
 
@@ -15,4 +17,8 @@ public interface UsuarioService {
 
 
     Boolean existsByEmail(String email);
+
+    List<UserDtoOut> getAll();
+
+    UserDtoOut editRol(String id, String rol);
 }

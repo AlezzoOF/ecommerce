@@ -45,9 +45,6 @@ public class FileSystemStorage implements StorageService {
                 Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
 
             }
-//            String fileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                    .path("/mediafiles/" + fileName) // Ruta relativa a la foto
-//                    .toUriString();
             return mediaLocation + "/" + fileName;
         } catch (IOException ex) {
             throw new RuntimeException("Fallo el guardado");

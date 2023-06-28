@@ -12,6 +12,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UsuarioServiceImp implements UsuarioService {
     private final UsuarioRepository repository;
@@ -64,4 +67,22 @@ public class UsuarioServiceImp implements UsuarioService {
     public Boolean existsByEmail(String email) {
         return repository.existsByEmail(email);
     }
+
+    @Override
+    public List<UserDtoOut> getAll() {
+        return repository.findAll().stream().map(mapper2::map).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDtoOut editRol(String id, String rol)throws UsernameNotFoundException {
+        if (repository.findById(id).isEmpty()){
+            throw new UsernameNotFoundException("Usuario no existente");
+        }
+        Usuario user = repository.findById(id).get();
+        user.setRol(rol);
+        repository.save(user);
+        return mapper2.map(user);
+
+    }
+
 }

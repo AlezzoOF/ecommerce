@@ -66,7 +66,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
         } else {
             DetalleOrden orden = repository.findById(id).orElseThrow(() -> new OrdenNotFoundException("Detalle no encontrado"));
             Producto p = orden.getProducto();
-            ProductoDTOOut enviar = new ProductoDTOOut(p.getId(), p.getNombre(), p.getDescripcion(), p.getPrecio(), p.getCantidad(), p.getImg());
+            ProductoDTOOut enviar = new ProductoDTOOut(p.getId(), p.getNombre(), p.getDescripcion(), p.getPrecio(),p.getTipo().getName() ,p.getCantidad(), p.getImg());
             DetalleOrdenDtoOne detalle = new DetalleOrdenDtoOne(orden.getCantidad(), enviar, orden.getTotal());
             return detalle;
         }
