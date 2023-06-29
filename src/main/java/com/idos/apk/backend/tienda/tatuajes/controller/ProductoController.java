@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/producto")
@@ -33,11 +34,10 @@ public class ProductoController {
                                @RequestParam("cantidad") int cantidad,
                                @RequestParam("tipo") String tipo,
                                @RequestParam("file") MultipartFile file) throws DataAllreadyTaken {
-        String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+
         ProductoDTOIn producto = new ProductoDTOIn(nombre, descripcion, precio, cantidad, tipo);
 
-
-        return new ResponseEntity<>(service.save(producto, file), HttpStatus.CREATED);
+        return new ResponseEntity<>(service.save(producto, file, request), HttpStatus.CREATED);
 
     }
 
@@ -58,7 +58,7 @@ public class ProductoController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity update(@RequestBody @Validated ProductoDTOIn producto, @PathVariable("id") String id) throws ProductoNotFoundException {
-        return new ResponseEntity<>(service.update(producto, id), HttpStatus.OK);
+        return new ResponseEntity<>(service.update(producto, id,request), HttpStatus.OK);
 
     }
 

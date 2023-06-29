@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .requestMatchers("/api/auth/register", "/producto/mostrar", "/producto/filtro/**", "/api/auth/login").permitAll()
+                .requestMatchers("/api/auth/register","/files/**","/producto/mostrar", "/producto/filtro/**", "/api/auth/login").permitAll()
                 .requestMatchers("/producto/crear",
                         "/producto/buscar/**",
                         "/producto/update/**",

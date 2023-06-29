@@ -45,7 +45,7 @@ public class FileSystemStorage implements StorageService {
                 Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
 
             }
-            return mediaLocation + "/" + fileName;
+            return fileName;
         } catch (IOException ex) {
             throw new RuntimeException("Fallo el guardado");
         }

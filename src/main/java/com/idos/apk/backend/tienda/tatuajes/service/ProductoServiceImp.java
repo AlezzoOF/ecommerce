@@ -15,12 +15,14 @@ import com.idos.apk.backend.tienda.tatuajes.repository.TipoProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.StorageService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,14 +49,20 @@ public class ProductoServiceImp implements ProductoService {
     //Guardar un producto
     @Override
     @Transactional
-    public ProductoDTOOut save(ProductoDTOIn objeto, MultipartFile file) throws DataAllreadyTaken {
+    public ProductoDTOOut save(ProductoDTOIn objeto, MultipartFile file, HttpServletRequest request) throws DataAllreadyTaken {
         if (repository.existsByNombre(objeto.nombre())) {
             throw new DataAllreadyTaken("Name allready exist");
         }
         Producto p = mapper.map(objeto);
         if (!file.isEmpty()) {
             String foto = storageService.store(file);
-            p.setImg(foto);
+            String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+            String url = ServletUriComponentsBuilder
+                    .fromHttpUrl(host)
+                    .path("/files/")
+                    .path(foto)
+                    .toUriString();
+            p.setImg(url);
         }
 
         TipoProducto tipo = tipoProductoRepository.findByName(objeto.tipo())
@@ -101,7 +109,7 @@ public class ProductoServiceImp implements ProductoService {
     //Actualizar un producto
     @Override
     @Transactional
-    public ProductoDTOOut update(ProductoDTOIn producto, String id) throws ProductoNotFoundException {
+    public ProductoDTOOut update(ProductoDTOIn producto, String id,HttpServletRequest request) throws ProductoNotFoundException {
         Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("Producto no pudo ser editado"));
         TipoProducto tipo = tipoProductoRepository.findByName(producto.tipo())
                 .orElseGet(() -> {
