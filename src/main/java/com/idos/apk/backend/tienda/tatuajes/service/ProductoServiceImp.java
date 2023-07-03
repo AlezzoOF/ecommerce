@@ -14,7 +14,6 @@ import com.idos.apk.backend.tienda.tatuajes.repository.ProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.repository.TipoProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.StorageService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -109,7 +108,7 @@ public class ProductoServiceImp implements ProductoService {
     //Actualizar un producto
     @Override
     @Transactional
-    public ProductoDTOOut update(ProductoDTOIn producto, String id,HttpServletRequest request) throws ProductoNotFoundException {
+    public ProductoDTOOut update(ProductoDTOIn producto, String id, HttpServletRequest request) throws ProductoNotFoundException {
         Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("Producto no pudo ser editado"));
         TipoProducto tipo = tipoProductoRepository.findByName(producto.tipo())
                 .orElseGet(() -> {

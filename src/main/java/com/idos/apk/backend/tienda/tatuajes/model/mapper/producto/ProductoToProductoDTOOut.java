@@ -11,7 +11,7 @@ public class ProductoToProductoDTOOut implements Mapper<Producto, ProductoDTOOut
     @Override
     public ProductoDTOOut map(Producto in) {
 
-        return new ProductoDTOOut(in.getId(), in.getNombre(), in.getDescripcion(), in.getPrecio(),in.getTipo().getName() ,in.getCantidad(), in.getImg());
+        return new ProductoDTOOut(in.getId(), in.getNombre(), in.getDescripcion(), in.getPrecio(), in.getTipo().getName(), in.getCantidad(), in.getImg());
     }
 
 }

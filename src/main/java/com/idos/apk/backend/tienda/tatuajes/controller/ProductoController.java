@@ -4,7 +4,6 @@ package com.idos.apk.backend.tienda.tatuajes.controller;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.DataAllreadyTaken;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOIn;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOOut;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/producto")
@@ -58,7 +56,7 @@ public class ProductoController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity update(@RequestBody @Validated ProductoDTOIn producto, @PathVariable("id") String id) throws ProductoNotFoundException {
-        return new ResponseEntity<>(service.update(producto, id,request), HttpStatus.OK);
+        return new ResponseEntity<>(service.update(producto, id, request), HttpStatus.OK);
 
     }
 

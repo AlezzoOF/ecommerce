@@ -1,5 +1,6 @@
 package com.idos.apk.backend.tienda.tatuajes.service;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.OrdenNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.DetalleOrden;
@@ -34,6 +35,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
     @Transactional
     public DetalleOrdenDto save(DetalleOrdenDto objeto, String orden) throws ProductoNotFoundException {
         DetalleOrden nuevo = new DetalleOrden();
+//        System.out.println(objeto.id());
         Producto producto = productoRepository.findById(objeto.id()).orElseThrow(() -> new ProductoNotFoundException("Produto no encontrado"));
         //Validacion de la entrada de cantidad y vacio de cantidad en el producto
         if (producto.getCantidad() - objeto.cantidad() == 0) {
@@ -46,11 +48,6 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
             producto.setCantidad(producto.getCantidad() - objeto.cantidad());
             productoRepository.save(producto);
         }
-        //Validacion del total
-//        if (producto.getPrecio() * objeto.cantidad() == objeto.total()){
-//
-//
-//        }else{throw new OrdenNotFoundException("Total erroneo en una de las ordenes");}
         nuevo.setCantidad(objeto.cantidad());
         nuevo.setTotal(objeto.total());
         nuevo.setProducto(productoRepository.getReferenceById(objeto.id()));
@@ -66,7 +63,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
         } else {
             DetalleOrden orden = repository.findById(id).orElseThrow(() -> new OrdenNotFoundException("Detalle no encontrado"));
             Producto p = orden.getProducto();
-            ProductoDTOOut enviar = new ProductoDTOOut(p.getId(), p.getNombre(), p.getDescripcion(), p.getPrecio(),p.getTipo().getName() ,p.getCantidad(), p.getImg());
+            ProductoDTOOut enviar = new ProductoDTOOut(p.getId(), p.getNombre(), p.getDescripcion(), p.getPrecio(), p.getTipo().getName(), p.getCantidad(), p.getImg());
             DetalleOrdenDtoOne detalle = new DetalleOrdenDtoOne(orden.getCantidad(), enviar, orden.getTotal());
             return detalle;
         }

@@ -4,6 +4,7 @@ import com.idos.apk.backend.tienda.tatuajes.exceptions.OrdenNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.detalleorden.DetalleOrdenDto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoIn;
+import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenPorAgno;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.DetalleOrdenService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.OrdenService;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/orden")
@@ -38,14 +42,21 @@ public class OrdenController {
     }
 
     @GetMapping("/mostrar")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity mostrar(@RequestParam String token) throws UsernameNotFoundException {
         return new ResponseEntity<>(service.getAllByUser(token), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable("id") String id) throws OrdenNotFoundException {
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable("id") String id) throws OrdenNotFoundException {
         service.delete(id);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 
+    @GetMapping("/tabla")
+    @ResponseStatus(HttpStatus.OK)
+    public OrdenPorAgno tabla(){
+        String agno = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
+        return service.filtroMes(agno);
     }
 }

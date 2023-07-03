@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +22,14 @@ public class Orden {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
+
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha_creacion")
     private LocalDate fechaCreacion;
+
+    private String agno;
+
+    private int mes;
     @Column(nullable = false, length = 20)
     private double total;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,6 +42,8 @@ public class Orden {
     @PrePersist
     public void prePersist() {
         fechaCreacion = LocalDate.now();
+         mes = Integer.parseInt(fechaCreacion.format(DateTimeFormatter.ofPattern("MM")));
+         agno = fechaCreacion.format(DateTimeFormatter.ofPattern("yyyy"));
     }
 
 }

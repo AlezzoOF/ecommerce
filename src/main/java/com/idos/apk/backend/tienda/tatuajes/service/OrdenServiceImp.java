@@ -5,6 +5,8 @@ import com.idos.apk.backend.tienda.tatuajes.model.Orden;
 import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoIn;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoOut;
+import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenPorAgno;
+import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenPorMes;
 import com.idos.apk.backend.tienda.tatuajes.model.mapper.orden.OrdenDtoInInToOrden;
 import com.idos.apk.backend.tienda.tatuajes.model.mapper.orden.OrdenInToOrdenDto;
 import com.idos.apk.backend.tienda.tatuajes.repository.OrdenRepository;
@@ -17,6 +19,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,13 +60,43 @@ public class OrdenServiceImp implements OrdenService {
         String email = generator.getUsernameFromJwt(token);
         Usuario user = usuarioRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<Orden> lista = repository.findAllByUsuario_id(user.getId());
-        List<OrdenDtoOut> enviar = lista.stream().map(p -> mapper.map(p)).collect(Collectors.toList());
-        return enviar;
+        return lista.stream().map(mapper::map).collect(Collectors.toList());
     }
 
     @Override
     public void delete(String id) throws OrdenNotFoundException {
-        Orden nueva = repository.findById(id).orElseThrow(() -> new OrdenNotFoundException("Orden no encontrada"));
+        if (!repository.existsById(id)){
+            throw new OrdenNotFoundException("Orden no existente");
+        }
         repository.deleteById(id);
+    }
+
+    @Override
+    public OrdenPorAgno filtroMes(String agno) {
+        List<OrdenPorMes>lista2 = new ArrayList<>();
+        for (int i = 1; i < 13; i++) {
+            List<Orden>lista = repository.findAllByMesAndAgno(i, agno);
+            OrdenPorMes ordenPorMes = OrdenPorMes.builder()
+                    .cantOrdenes(lista.size())
+                    .totalMes(lista.stream()
+                            .mapToDouble(Orden::getTotal)
+                            .sum())
+                    .mes(i)
+                    .porciento(getPorciento(lista.size()))
+                    .build();
+            lista2.add(ordenPorMes);
+        }
+
+        return OrdenPorAgno.builder()
+                .totalOrd(repository.findAll().size())
+                .totalDinero(repository.findAll().stream()
+                        .mapToDouble(Orden::getTotal)
+                        .sum())
+                .lista(lista2)
+                .build();
+    }
+
+    private double getPorciento(int size) {
+        return (double) size*100/repository.findAll().size();
     }
 }

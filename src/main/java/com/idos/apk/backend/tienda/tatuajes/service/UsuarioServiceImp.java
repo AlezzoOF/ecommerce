@@ -74,8 +74,8 @@ public class UsuarioServiceImp implements UsuarioService {
     }
 
     @Override
-    public UserDtoOut editRol(String id, String rol)throws UsernameNotFoundException {
-        if (repository.findById(id).isEmpty()){
+    public UserDtoOut editRol(String id, String rol) throws UsernameNotFoundException {
+        if (repository.findById(id).isEmpty()) {
             throw new UsernameNotFoundException("Usuario no existente");
         }
         Usuario user = repository.findById(id).get();

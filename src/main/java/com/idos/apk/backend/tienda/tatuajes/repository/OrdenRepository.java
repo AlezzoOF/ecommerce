@@ -11,4 +11,6 @@ import java.util.List;
 public interface OrdenRepository extends JpaRepository<Orden, String> {
     List<Orden> findAllByUsuario_id(String id);
 
+    List<Orden> findAllByMesAndAgno(int mes, String anio);
+
 }

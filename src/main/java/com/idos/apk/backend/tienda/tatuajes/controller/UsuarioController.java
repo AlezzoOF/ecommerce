@@ -17,13 +17,13 @@ public class UsuarioController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDtoOut> getAll(){
+    public List<UserDtoOut> getAll() {
         return service.getAll();
     }
 
     @PutMapping("/{id}/rol/{rol}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDtoOut editRol(@PathVariable String id, @PathVariable String rol)throws UsernameNotFoundException {
+    public UserDtoOut editRol(@PathVariable String id, @PathVariable String rol) throws UsernameNotFoundException {
         return service.editRol(id, rol);
     }
 }
