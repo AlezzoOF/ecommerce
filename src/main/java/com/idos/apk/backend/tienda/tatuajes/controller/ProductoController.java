@@ -3,6 +3,7 @@ package com.idos.apk.backend.tienda.tatuajes.controller;
 
 import com.idos.apk.backend.tienda.tatuajes.exceptions.DataAllreadyTaken;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
+import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.FiltroProducto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOIn;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoPageableResponse;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
@@ -68,16 +69,6 @@ public class ProductoController {
 
     }
 
-//    @GetMapping("/filtro")
-//    public ResponseEntity findAllByTipo(
-//            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-//            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-//            @RequestParam String filtro
-//    ) {
-//
-//        return new ResponseEntity<>(service.getAllByTipo(pageNo, pageSize, filtro), HttpStatus.OK);
-//
-//    }
 
     @GetMapping("/tipo/{tipo}")
     public ResponseEntity<ProductoPageableResponse> getProductosByTipo(
@@ -108,5 +99,13 @@ public class ProductoController {
     ) {
         ProductoPageableResponse response = service.findByPrecioBetween(pageNo, pageSize, precioMinimo, precioMaximo);
         return ResponseEntity.ok(response);
+    }
+
+    //////Prueba/////
+    @PostMapping("/productos/filtrar")
+    public ProductoPageableResponse filtrarProductos(@RequestBody FiltroProducto filtro,
+                                                     @RequestParam(defaultValue = "0") int pageNo,
+                                                     @RequestParam(defaultValue = "10") int pageSize) {
+        return service.filtrarProductos(filtro, pageNo, pageSize);
     }
 }

@@ -5,6 +5,7 @@ import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException
 import com.idos.apk.backend.tienda.tatuajes.exceptions.TipoProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.Producto;
 import com.idos.apk.backend.tienda.tatuajes.model.TipoProducto;
+import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.FiltroProducto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOIn;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOOut;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoPageableResponse;
@@ -18,6 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -181,6 +183,55 @@ public class ProductoServiceImp implements ProductoService {
         response.setLast(lista.isLast());
 
         return response;
+    }
+
+    ////prueba/////
+
+    public ProductoPageableResponse filtrarProductos(FiltroProducto filtro, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Specification<Producto> spec = buildSpecification(filtro);
+        Page<Producto> lista = repository.findAll(spec, pageable);
+        List<ProductoDTOOut> content = lista.getContent().stream()
+                .map(mapper2::map)
+                .collect(Collectors.toList());
+
+        ProductoPageableResponse response = new ProductoPageableResponse();
+        response.setContent(content);
+        response.setPageNo(lista.getNumber());
+        response.setPageSize(lista.getSize());
+        response.setTotalElements(lista.getTotalElements());
+        response.setTotalPages(lista.getTotalPages());
+        response.setLast(lista.isLast());
+
+        return response;
+    }
+
+    private Specification<Producto> buildSpecification(FiltroProducto filtro) {
+        return Specification.where(tipoEquals(filtro.getTipo()))
+                .and(enableEquals(filtro.isEnable()))
+                .and(precioBetween(filtro.getPrecioMinimo(), filtro.getPrecioMaximo()));
+    }
+
+    private Specification<Producto> tipoEquals(String tipo) {
+        if (tipo != null && !tipo.isEmpty()) {
+            return (root, query, builder) ->
+                    builder.equal(root.get("tipo").get("name"), tipo);
+        }
+        return null;
+    }
+
+    private Specification<Producto> enableEquals(boolean enable) {
+        return (root, query, builder) ->
+                builder.equal(root.get("enable"), enable);
+    }
+
+    private Specification<Producto> precioBetween(double precioMinimo, double precioMaximo) {
+        if (precioMinimo > 0.0 && precioMaximo > 0.0) {
+            return (root, query, builder) ->
+                    builder.between(root.get("precio"), precioMinimo, precioMaximo);
+        } else {
+            return null;
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package com.idos.apk.backend.tienda.tatuajes.service.interfaces;
 
+import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.FiltroProducto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOIn;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOOut;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoPageableResponse;
@@ -23,6 +24,10 @@ public interface ProductoService {
     ProductoPageableResponse findAllByEnable(boolean bol, int pageNo, int pageSize);//Buscar los productos en stock
 
     ProductoPageableResponse findByPrecioBetween(int pageNo, int pageSize, double precioMinimo, double precioMaximo);
+
+    ///prueba
+
+    ProductoPageableResponse filtrarProductos(FiltroProducto filtro, int pageNo, int pageSize);
 
 
 }
