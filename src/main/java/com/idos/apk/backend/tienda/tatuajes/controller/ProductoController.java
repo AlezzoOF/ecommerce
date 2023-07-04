@@ -4,6 +4,7 @@ package com.idos.apk.backend.tienda.tatuajes.controller;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.DataAllreadyTaken;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOIn;
+import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoPageableResponse;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -62,19 +63,50 @@ public class ProductoController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity delete(@PathVariable("id") String id) throws ProductoNotFoundException {
-        service.delete(id);
+        service.delete(id, request);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
-    @GetMapping("/filtro")
-    public ResponseEntity findAllByTipo(
-            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-            @RequestParam String filtro
+//    @GetMapping("/filtro")
+//    public ResponseEntity findAllByTipo(
+//            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+//            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+//            @RequestParam String filtro
+//    ) {
+//
+//        return new ResponseEntity<>(service.getAllByTipo(pageNo, pageSize, filtro), HttpStatus.OK);
+//
+//    }
+
+    @GetMapping("/tipo/{tipo}")
+    public ResponseEntity<ProductoPageableResponse> getProductosByTipo(
+            @PathVariable String tipo,
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "10") int pageSize
     ) {
+        ProductoPageableResponse response = service.getAllByTipo(pageNo, pageSize, tipo);
+        return ResponseEntity.ok(response);
+    }
 
-        return new ResponseEntity<>(service.getAllByTipo(pageNo, pageSize, filtro), HttpStatus.OK);
+    @GetMapping("/enable/{bol}")
+    public ResponseEntity<ProductoPageableResponse> getProductosByEnable(
+            @PathVariable boolean bol,
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        ProductoPageableResponse response = service.findAllByEnable(bol, pageNo, pageSize);
+        return ResponseEntity.ok(response);
+    }
 
+    @GetMapping("/precio")
+    public ResponseEntity<ProductoPageableResponse> getProductosByPrecioBetween(
+            @RequestParam double precioMinimo,
+            @RequestParam double precioMaximo,
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        ProductoPageableResponse response = service.findByPrecioBetween(pageNo, pageSize, precioMinimo, precioMaximo);
+        return ResponseEntity.ok(response);
     }
 }

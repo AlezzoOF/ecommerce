@@ -16,7 +16,7 @@ public interface ProductoService {
 
     ProductoDTOOut update(ProductoDTOIn producto, String id, HttpServletRequest request);
 
-    void delete(String id);
+    void delete(String id, HttpServletRequest request );
 
     ProductoPageableResponse getAllByTipo(int pageNo, int pageSize, String tipo);
 

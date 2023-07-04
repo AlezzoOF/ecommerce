@@ -26,4 +26,12 @@ public class UsuarioController {
     public UserDtoOut editRol(@PathVariable String id, @PathVariable String rol) throws UsernameNotFoundException {
         return service.editRol(id, rol);
     }
+
+    @DeleteMapping("/id/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteById(@PathVariable String id)throws UsernameNotFoundException{
+        service.deleteById(id);
+    }
+
+
 }

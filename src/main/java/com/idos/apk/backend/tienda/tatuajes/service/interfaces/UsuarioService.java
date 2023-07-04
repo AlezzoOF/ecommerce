@@ -21,4 +21,7 @@ public interface UsuarioService {
     List<UserDtoOut> getAll();
 
     UserDtoOut editRol(String id, String rol);
+
+    void deleteById(String id);
+    void deleteByToken(String token);
 }

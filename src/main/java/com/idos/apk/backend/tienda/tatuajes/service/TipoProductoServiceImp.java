@@ -20,14 +20,13 @@ public class TipoProductoServiceImp implements TipoProductoService {
 
     @Override
     @Transactional
-    public TipoProducto save(String string) throws DataAllreadyTaken {
-        if (repository.existsByName(string)) {
+    public TipoProducto save(String name) throws DataAllreadyTaken {
+        if (repository.existsByName(name)) {
             throw new DataAllreadyTaken("Allready exist");
-        } else {
-            TipoProducto tipo = new TipoProducto();
-            tipo.setName(string);
-            return repository.save(tipo);
         }
+        TipoProducto tipo = new TipoProducto();
+        tipo.setName(name);
+        return repository.save(tipo);
     }
 
     @Override
@@ -37,16 +36,15 @@ public class TipoProductoServiceImp implements TipoProductoService {
 
     @Override
     public void delete(String id) throws TipoProductoNotFoundException {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-        } else {
-            throw new TipoProductoNotFoundException("TIpo de Producto no encontrado");
+        if (!repository.existsById(id)) {
+            throw new TipoProductoNotFoundException("Tipo de Producto not found");
         }
+        repository.deleteById(id);
 
     }
 
     @Override
-    public boolean ifExist(String s) {
-        return repository.existsByName(s);
+    public boolean ifExist(String name) {
+        return repository.existsByName(name);
     }
 }

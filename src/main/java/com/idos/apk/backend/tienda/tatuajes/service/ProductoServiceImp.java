@@ -50,7 +50,7 @@ public class ProductoServiceImp implements ProductoService {
     @Transactional
     public ProductoDTOOut save(ProductoDTOIn objeto, MultipartFile file, HttpServletRequest request) throws DataAllreadyTaken {
         if (repository.existsByNombre(objeto.nombre())) {
-            throw new DataAllreadyTaken("Name allready exist");
+            throw new DataAllreadyTaken("Name already exist");
         }
         Producto p = mapper.map(objeto);
         if (!file.isEmpty()) {
@@ -65,17 +65,10 @@ public class ProductoServiceImp implements ProductoService {
         }
 
         TipoProducto tipo = tipoProductoRepository.findByName(objeto.tipo())
-                .orElseGet(() -> {
-                    TipoProducto newTipo = new TipoProducto();
-                    newTipo.setName(objeto.tipo());
-                    return tipoProductoRepository.save(newTipo);
-                });
+                .orElseGet(() -> tipoProductoRepository.save(new TipoProducto(objeto.tipo())));
         p.setTipo(tipo);
         repository.save(p);
-        ProductoDTOOut enviar = mapper2.map(p);
-
-        return enviar;
-
+        return mapper2.map(p);
     }
 
     //mostrar todos los productos
@@ -83,8 +76,9 @@ public class ProductoServiceImp implements ProductoService {
     public ProductoPageableResponse getAll(int pageNo, int pageSize) {
         Pageable pagable = PageRequest.of(pageNo, pageSize);
         Page<Producto> lista = repository.findAll(pagable);
-        List<Producto> listOfProductos = lista.getContent();
-        List<ProductoDTOOut> content = listOfProductos.stream().map(p -> mapper2.map(p)).collect(Collectors.toList());
+        List<ProductoDTOOut> content = lista.getContent().stream()
+                .map(mapper2::map)
+                .collect(Collectors.toList());
 
         ProductoPageableResponse response = new ProductoPageableResponse();
         response.setContent(content);
@@ -101,7 +95,8 @@ public class ProductoServiceImp implements ProductoService {
     //Buscar Producto por id
     @Override
     public ProductoDTOOut getById(String id) throws ProductoNotFoundException {
-        Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado"));
+        Producto p = repository.findById(id)
+                .orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado"));
         return mapper2.map(p);
     }
 
@@ -109,13 +104,10 @@ public class ProductoServiceImp implements ProductoService {
     @Override
     @Transactional
     public ProductoDTOOut update(ProductoDTOIn producto, String id, HttpServletRequest request) throws ProductoNotFoundException {
-        Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("Producto no pudo ser editado"));
+        Producto p = repository.findById(id)
+                .orElseThrow(() -> new ProductoNotFoundException("Producto no pudo ser editado"));
         TipoProducto tipo = tipoProductoRepository.findByName(producto.tipo())
-                .orElseGet(() -> {
-                    TipoProducto newTipo = new TipoProducto();
-                    newTipo.setName(producto.tipo());
-                    return tipoProductoRepository.save(newTipo);
-                });
+                .orElseGet(() -> tipoProductoRepository.save(new TipoProducto(producto.tipo())));
         p.setTipo(tipo);
         p.setId(id);
         p.setNombre(producto.nombre());
@@ -123,15 +115,16 @@ public class ProductoServiceImp implements ProductoService {
         p.setCantidad(producto.cantidad());
         p.setPrecio(producto.precio());
         repository.save(p);
-        ProductoDTOOut enviar = mapper2.map(p);
-        return enviar;
+        return mapper2.map(p);
     }
 
     //Borrar producto x id
     @Override
-    public void delete(String id) throws ProductoNotFoundException {
-        Producto p = repository.findById(id).orElseThrow(() -> new ProductoNotFoundException("No se pudo eliminar"));
-        storageService.loadResource(p.getImg());
+    public void delete(String id, HttpServletRequest request) throws ProductoNotFoundException {
+        String url = request.getRequestURL().toString().replace(request.getRequestURI(), "") + "/files/";
+        Producto p = repository.findById(id)
+                .orElseThrow(() -> new ProductoNotFoundException("No se pudo eliminar"));
+        storageService.loadResource(p.getImg().replace(url,""));
         repository.deleteById(id);
     }
 
@@ -139,18 +132,12 @@ public class ProductoServiceImp implements ProductoService {
     @Override
     public ProductoPageableResponse getAllByTipo(int pageNo, int pageSize, String tipo) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        TipoProducto tipoProducto = tipoProductoRepository.findByName(tipo).orElseThrow(() -> new TipoProductoNotFoundException("NotFoun Tipo"));
-        Page<Producto> lista = repository.findAll(pageable);
-        List<Producto> listOfProductos = lista.getContent();
-        List<Producto> filtro = new ArrayList<>();
-        for (Producto p :
-                listOfProductos) {
-            if (p.getTipo().getName().equals(tipoProducto.getName())) {
-                filtro.add(p);
-            }
-        }
-        List<ProductoDTOOut> content = filtro.stream().map(p -> mapper2.map(p)).collect(Collectors.toList());
-
+        TipoProducto tipoProducto = tipoProductoRepository.findByName(tipo)
+                .orElseThrow(() -> new TipoProductoNotFoundException("Tipo not found"));
+        Page<Producto> lista = repository.findByTipo(pageable, tipoProducto);
+        List<ProductoDTOOut> content = lista.getContent().stream()
+                .map(mapper2::map)
+                .collect(Collectors.toList());
         ProductoPageableResponse response = new ProductoPageableResponse();
         response.setContent(content);
         response.setPageNo(lista.getNumber());
@@ -158,25 +145,16 @@ public class ProductoServiceImp implements ProductoService {
         response.setTotalElements(lista.getTotalElements());
         response.setTotalPages(lista.getTotalPages());
         response.setLast(lista.isLast());
-
-
         return response;
     }
 
     @Override
     public ProductoPageableResponse findAllByEnable(boolean bol, int pageNo, int pageSize) {
-        Pageable pagable = PageRequest.of(pageNo, pageSize);
-        Page<Producto> lista = repository.findAll(pagable);
-        List<Producto> listOfProductos = lista.getContent();
-        List<Producto> filtro = new ArrayList<>();
-        for (Producto p :
-                listOfProductos) {
-            if (p.isEnable()) {
-                filtro.add(p);
-            }
-        }
-        List<ProductoDTOOut> content = filtro.stream().map(p -> mapper2.map(p)).collect(Collectors.toList());
-
+        Pageable pageable  = PageRequest.of(pageNo, pageSize);
+        Page<Producto> lista = repository.findByEnable(pageable, bol);
+        List<ProductoDTOOut> content = lista.getContent().stream()
+                .map(mapper2::map)
+                .collect(Collectors.toList());
         ProductoPageableResponse response = new ProductoPageableResponse();
         response.setContent(content);
         response.setPageNo(lista.getNumber());
@@ -184,24 +162,16 @@ public class ProductoServiceImp implements ProductoService {
         response.setTotalElements(lista.getTotalElements());
         response.setTotalPages(lista.getTotalPages());
         response.setLast(lista.isLast());
-
         return response;
     }
 
     @Override
     public ProductoPageableResponse findByPrecioBetween(int pageNo, int pageSize, double precioMinimo, double precioMaximo) {
-        Pageable pagable = PageRequest.of(pageNo, pageSize);
-        Page<Producto> lista = repository.findAll(pagable);
-        List<Producto> listOfProductos = lista.getContent();
-        List<Producto> filtro = new ArrayList<>();
-        for (Producto p :
-                listOfProductos) {
-            if (precioMinimo < p.getPrecio() && p.getPrecio() < precioMaximo) {
-                filtro.add(p);
-            }
-        }
-        List<ProductoDTOOut> content = filtro.stream().map(p -> mapper2.map(p)).collect(Collectors.toList());
-
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Producto> lista = repository.findByPrecioBetween(pageable, precioMinimo, precioMaximo);
+        List<ProductoDTOOut> content = lista.getContent().stream()
+                .map(mapper2::map)
+                .collect(Collectors.toList());
         ProductoPageableResponse response = new ProductoPageableResponse();
         response.setContent(content);
         response.setPageNo(lista.getNumber());

@@ -7,6 +7,7 @@ import com.idos.apk.backend.tienda.tatuajes.model.dto.user.UserDtoOut;
 import com.idos.apk.backend.tienda.tatuajes.model.mapper.user.RegisterDtoInToUser;
 import com.idos.apk.backend.tienda.tatuajes.model.mapper.user.UserInToDtoOut;
 import com.idos.apk.backend.tienda.tatuajes.repository.UsuarioRepository;
+import com.idos.apk.backend.tienda.tatuajes.security.JWTGenerator;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.UsuarioService;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,32 +22,29 @@ public class UsuarioServiceImp implements UsuarioService {
     private final UserInToDtoOut mapper2;
 
     private final RegisterDtoInToUser mapper;
+    private final JWTGenerator generator;
 
-    public UsuarioServiceImp(UsuarioRepository repository, UserInToDtoOut mapper2, RegisterDtoInToUser mapper) {
+    public UsuarioServiceImp(UsuarioRepository repository, UserInToDtoOut mapper2, RegisterDtoInToUser mapper, JWTGenerator generator) {
         this.repository = repository;
         this.mapper2 = mapper2;
         this.mapper = mapper;
+        this.generator = generator;
     }
 
 
     @Override
     @Transactional
     public void saveUser(RegisterDto registerDto) throws DataAllreadyTaken {
-        if (repository.existsByEmail(registerDto.userName())) {
-            throw new DataAllreadyTaken("User already exist");
-        }
+        validateEmailNotExist(registerDto.userName());
         Usuario user = mapper.map(registerDto);
         user.setRol("USER");
         repository.save(user);
-//        System.out.println(user.getNombre());
     }
 
     @Override
     @Transactional
     public void saveUserLikeAdmin(RegisterDto registerDto) throws DataAllreadyTaken {
-        if (repository.existsByEmail(registerDto.userName())) {
-            throw new DataAllreadyTaken("User already exist");
-        }
+        validateEmailNotExist(registerDto.userName());
         Usuario user = mapper.map(registerDto);
         user.setRol("ADMIN");
         repository.save(user);
@@ -54,7 +52,8 @@ public class UsuarioServiceImp implements UsuarioService {
 
     @Override
     public Usuario valid(String email) throws UsernameNotFoundException {
-        return repository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("user not found"));
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 
     @Override
@@ -70,19 +69,51 @@ public class UsuarioServiceImp implements UsuarioService {
 
     @Override
     public List<UserDtoOut> getAll() {
-        return repository.findAll().stream().map(mapper2::map).collect(Collectors.toList());
+        return repository.findAll()
+                .stream()
+                .map(mapper2::map)
+                .collect(Collectors.toList());
     }
 
     @Override
     public UserDtoOut editRol(String id, String rol) throws UsernameNotFoundException {
-        if (repository.findById(id).isEmpty()) {
-            throw new UsernameNotFoundException("Usuario no existente");
-        }
-        Usuario user = repository.findById(id).get();
+        Usuario user = getUserById(id);
         user.setRol(rol);
         repository.save(user);
         return mapper2.map(user);
 
+    }
+
+    @Override
+    public void deleteById(String id)throws UsernameNotFoundException {
+        Usuario user = getUserById(id);
+        repository.deleteById(user.getId());
+    }
+
+    @Override
+    public void deleteByToken(String token)throws UsernameNotFoundException {
+        String email = generator.getUsernameFromJwt(token);
+        Usuario user = getUserByEmail(email);
+        repository.deleteById(user.getId());
+
+    }
+
+    //Metodos auxiliares
+
+    private void validateEmailNotExist(String email) throws DataAllreadyTaken {
+        if (repository.existsByEmail(email)) {
+            throw new DataAllreadyTaken("User already exists");
+        }
+    }
+
+    private Usuario getUserById(String id) throws UsernameNotFoundException {
+        return repository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    private Usuario getUserByEmail(String email) throws UsernameNotFoundException {
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
 }

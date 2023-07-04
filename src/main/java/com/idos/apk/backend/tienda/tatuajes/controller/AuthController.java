@@ -55,4 +55,6 @@ public class AuthController {
         return new ResponseEntity<>(new AuthResponse(token, "Bearer", rol), HttpStatus.OK);
 
     }
+
+
 }
