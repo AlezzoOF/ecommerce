@@ -3,6 +3,7 @@ package com.idos.apk.backend.tienda.tatuajes.service.interfaces;
 import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.RegisterDto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.UserDtoOut;
+import com.idos.apk.backend.tienda.tatuajes.model.dto.user.UsuarioEdit;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface UsuarioService {
 
     List<UserDtoOut> getAll();
 
-    UserDtoOut editRol(String id, String rol);
+    UserDtoOut edit(UsuarioEdit edit, String id);
 
     void deleteById(String id);
     void deleteByToken(String token);

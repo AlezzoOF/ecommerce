@@ -1,6 +1,7 @@
 package com.idos.apk.backend.tienda.tatuajes.controller;
 
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.UserDtoOut;
+import com.idos.apk.backend.tienda.tatuajes.model.dto.user.UsuarioEdit;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +22,10 @@ public class UsuarioController {
         return service.getAll();
     }
 
-    @PutMapping("/{id}/rol/{rol}")
+    @PutMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDtoOut editRol(@PathVariable String id, @PathVariable String rol) throws UsernameNotFoundException {
-        return service.editRol(id, rol);
+    public UserDtoOut editRol(@RequestBody UsuarioEdit edit, @PathVariable String id) throws UsernameNotFoundException {
+        return service.edit(edit, id);
     }
 
     @DeleteMapping("/id/{id}")

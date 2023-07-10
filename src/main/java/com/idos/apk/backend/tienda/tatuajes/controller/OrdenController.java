@@ -4,6 +4,7 @@ import com.idos.apk.backend.tienda.tatuajes.exceptions.OrdenNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.detalleorden.DetalleOrdenDto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoIn;
+import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoOut;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenPorAgno;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.DetalleOrdenService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.OrdenService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequestMapping("/orden")
@@ -43,8 +45,27 @@ public class OrdenController {
 
     @GetMapping("/mostrar")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity mostrar(@RequestParam String token) throws UsernameNotFoundException {
+    public ResponseEntity mostrarPorUsuario(@RequestParam String token) throws UsernameNotFoundException {
         return new ResponseEntity<>(service.getAllByUser(token), HttpStatus.OK);
+    }
+
+    @GetMapping("/mostrarTodo")
+    @ResponseStatus(HttpStatus.OK)
+    public List<OrdenDtoOut> mostrar() {
+        return service.getAll();
+    }
+
+    @GetMapping("/mostrarTodoFecha")
+    @ResponseStatus(HttpStatus.OK)
+    public List<OrdenDtoOut> mostrarPorFecha(@RequestParam("mes")int mes,
+                                             @RequestParam("Agno")String agno) {
+        return service.getAllByDate(mes, agno);
+    }
+
+    @GetMapping("/mostrarId/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<OrdenDtoOut> mostrarPorUserId(@PathVariable("id") String id){
+       return service.getAllByUserAdmin(id);
     }
 
     @DeleteMapping("/delete/{id}")

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class OrdenServiceImp implements OrdenService {
@@ -48,9 +49,12 @@ public class OrdenServiceImp implements OrdenService {
     @Override
     @Transactional
     public OrdenDtoOut save(OrdenDtoIn objeto) throws UsernameNotFoundException {
-        Orden nueva = mapper2.map(objeto);
         String email = generator.getUsernameFromJwt(objeto.token());
-        nueva.setUsuario(usuarioRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Usuario no valido")));//setear usuario
+        Usuario user = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no válido"));
+
+        Orden nueva = mapper2.map(objeto);
+        nueva.setUsuario(user);
         Orden guardada = repository.save(nueva);
         return mapper.map(guardada);
     }
@@ -58,9 +62,37 @@ public class OrdenServiceImp implements OrdenService {
     @Override
     public List<OrdenDtoOut> getAllByUser(String token) throws UsernameNotFoundException {
         String email = generator.getUsernameFromJwt(token);
-        Usuario user = usuarioRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Usuario user = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
         List<Orden> lista = repository.findAllByUsuario_id(user.getId());
-        return lista.stream().map(mapper::map).collect(Collectors.toList());
+        return lista.stream()
+                .map(mapper::map)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrdenDtoOut> getAll() {
+        List<Orden> lista = repository.findAll();
+        return lista.stream()
+                .map(mapper::map)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrdenDtoOut> getAllByDate(int mes, String agno) {
+        List<Orden> lista = repository.findAllByMesAndAgno(mes, agno);
+        return lista.stream()
+                .map(mapper::map)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrdenDtoOut> getAllByUserAdmin(String id) {
+        List<Orden> lista = repository.findAllByUsuario_id(id);
+        return lista.stream()
+                .map(mapper::map)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -73,30 +105,36 @@ public class OrdenServiceImp implements OrdenService {
 
     @Override
     public OrdenPorAgno filtroMes(String agno) {
-        List<OrdenPorMes>lista2 = new ArrayList<>();
-        for (int i = 1; i < 13; i++) {
-            List<Orden>lista = repository.findAllByMesAndAgno(i, agno);
-            OrdenPorMes ordenPorMes = OrdenPorMes.builder()
-                    .cantOrdenes(lista.size())
-                    .totalMes(lista.stream()
+        List<OrdenPorMes> lista2 = IntStream.rangeClosed(1, 12)
+                .mapToObj(i -> {
+                    List<Orden> lista = repository.findAllByMesAndAgno(i, agno);
+                    double totalMes = lista.stream()
                             .mapToDouble(Orden::getTotal)
-                            .sum())
-                    .mes(i)
-                    .porciento(getPorciento(lista.size()))
-                    .build();
-            lista2.add(ordenPorMes);
-        }
+                            .sum();
+                    double porciento = getPorciento(lista.size());
+                    return OrdenPorMes.builder()
+                            .cantOrdenes(lista.size())
+                            .totalMes(totalMes)
+                            .mes(i)
+                            .porciento(porciento)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        int totalOrd = (int) repository.count();
+        double totalDinero = repository.findAll().stream()
+                .mapToDouble(Orden::getTotal)
+                .sum();
 
         return OrdenPorAgno.builder()
-                .totalOrd(repository.findAll().size())
-                .totalDinero(repository.findAll().stream()
-                        .mapToDouble(Orden::getTotal)
-                        .sum())
+                .totalOrd(totalOrd)
+                .totalDinero(totalDinero)
                 .lista(lista2)
                 .build();
     }
 
     private double getPorciento(int size) {
-        return (double) size*100/repository.findAll().size();
+        int totalOrd = (int) repository.count();
+        return (double) size * 100 / totalOrd;
     }
 }

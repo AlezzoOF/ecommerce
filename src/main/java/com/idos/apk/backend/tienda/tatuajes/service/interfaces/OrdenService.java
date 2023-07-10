@@ -11,6 +11,13 @@ public interface OrdenService {
 
     List<OrdenDtoOut> getAllByUser(String token);
 
+    List<OrdenDtoOut> getAll();
+
+    List<OrdenDtoOut> getAllByDate(int mes, String agno);
+
+    List<OrdenDtoOut> getAllByUserAdmin(String id);
+
+
     void delete(String id);
 
     OrdenPorAgno filtroMes(String agno);

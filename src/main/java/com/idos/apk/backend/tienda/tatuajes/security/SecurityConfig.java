@@ -39,9 +39,17 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .requestMatchers("/api/auth/register", "/files/**", "/producto/mostrar", "/producto/filtro/**", "/api/auth/login").permitAll()
-                .requestMatchers("/producto/crear",
+                .requestMatchers("/api/auth/register",
+                        "/files/**",
+                        "/producto/mostrar",
+                        "/producto/filtro/**",
+                        "/api/auth/login").permitAll()
+                .requestMatchers(
+                        "/producto/crear",
                         "/orden/tabla",
+                        "/orden/mostrarTodo",
+                        "/orden/mostrarTodoFecha",
+                        "/orden/mostrarId/**",
                         "/producto/buscar/**",
                         "/producto/update/**",
                         "/producto/delete/**",
