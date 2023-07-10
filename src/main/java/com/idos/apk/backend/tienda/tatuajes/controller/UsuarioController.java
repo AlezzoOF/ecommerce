@@ -34,5 +34,9 @@ public class UsuarioController {
         service.deleteById(id);
     }
 
-
+    @GetMapping("/id/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDtoOut findOneById(@PathVariable String id)throws UsernameNotFoundException{
+       return service.findOneById(id);
+    }
 }

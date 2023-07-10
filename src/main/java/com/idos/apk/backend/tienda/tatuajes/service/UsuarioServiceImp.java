@@ -105,6 +105,11 @@ public class UsuarioServiceImp implements UsuarioService {
 
     }
 
+    @Override
+    public UserDtoOut findOneById(String id)throws UsernameNotFoundException {
+        return mapper2.map(repository.findById(id).orElseThrow(()->new UsernameNotFoundException("User not found")));
+    }
+
     //Metodos auxiliares
 
     private void validateEmailNotExist(String email) throws DataAllreadyTaken {

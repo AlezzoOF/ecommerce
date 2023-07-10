@@ -25,4 +25,6 @@ public interface UsuarioService {
 
     void deleteById(String id);
     void deleteByToken(String token);
+
+    UserDtoOut findOneById(String id);
 }

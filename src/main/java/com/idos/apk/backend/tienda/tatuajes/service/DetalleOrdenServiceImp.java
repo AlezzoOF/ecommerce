@@ -1,6 +1,5 @@
 package com.idos.apk.backend.tienda.tatuajes.service;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.OrdenNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.DetalleOrden;
