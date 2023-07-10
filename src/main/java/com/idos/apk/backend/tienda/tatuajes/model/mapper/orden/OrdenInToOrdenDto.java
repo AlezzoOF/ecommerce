@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class OrdenInToOrdenDto implements Mapper<Orden, OrdenDtoOut> {
     @Override
     public OrdenDtoOut map(Orden in) {
-        OrdenDtoOut nueva = new OrdenDtoOut(in.getTotal(), in.getId(), in.getFechaCreacion());
+        OrdenDtoOut nueva = new OrdenDtoOut(in.getTotal(), in.getId(), in.getFechaCreacion(), in.getUsuario().getId());
         return nueva;
     }
 }
