@@ -26,6 +26,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = getJWTFromRequest(request);
+        //manar a llamar al black list
         if (StringUtils.hasText(token) && jwtGenerator.validateToken(token)) {
             String username = jwtGenerator.getUsernameFromJwt(token);
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
