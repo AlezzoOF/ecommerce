@@ -35,7 +35,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
     public DetalleOrdenDto save(DetalleOrdenDto objeto, String orden) throws ProductoNotFoundException {
         DetalleOrden nuevo = new DetalleOrden();
 //        System.out.println(objeto.id());
-        Producto producto = productoRepository.findById(objeto.id()).orElseThrow(() -> new ProductoNotFoundException("Produto no encontrado"));
+        Producto producto = productoRepository.findById(objeto.id_detalle()).orElseThrow(() -> new ProductoNotFoundException("Produto no encontrado"));
         //Validacion de la entrada de cantidad y vacio de cantidad en el producto
         if (producto.getCantidad() - objeto.cantidad() == 0) {
             producto.setCantidad(0);
@@ -49,7 +49,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
         }
         nuevo.setCantidad(objeto.cantidad());
         nuevo.setTotal(objeto.total());
-        nuevo.setProducto(productoRepository.getReferenceById(objeto.id()));
+        nuevo.setProducto(productoRepository.getReferenceById(objeto.id_detalle()));
         nuevo.setOrden(ordenRepository.getReferenceById(orden));
         repository.save(nuevo);
         return objeto;
@@ -77,7 +77,7 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
     }
 
     private DetalleOrdenDto mapper(DetalleOrden detalleOrden) {
-        DetalleOrdenDto enviar = new DetalleOrdenDto(detalleOrden.getCantidad(), detalleOrden.getProducto().getId(), detalleOrden.getTotal());
+        DetalleOrdenDto enviar = new DetalleOrdenDto(detalleOrden.getCantidad(), detalleOrden.getId(), detalleOrden.getTotal());
         return enviar;
     }
 }
