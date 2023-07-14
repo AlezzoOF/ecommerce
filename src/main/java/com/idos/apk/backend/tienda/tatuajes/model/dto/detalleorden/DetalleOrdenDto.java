@@ -7,7 +7,7 @@ public record DetalleOrdenDto(@NotNull(message = "No puede ser nulo")
                               int cantidad,
                               @NotNull(message = "No puede ser nulo")
                               @NotEmpty(message = "No puede ser vacio")
-                              String id_detalle,
+                              String id_producto,
                               @NotNull(message = "No puede ser nulo")
                               double total) {
 }

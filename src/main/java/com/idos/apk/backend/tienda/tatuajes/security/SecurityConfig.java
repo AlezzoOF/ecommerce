@@ -43,6 +43,7 @@ public class SecurityConfig {
                         "/files/**",
                         "/producto/mostrar",
                         "/producto/filtro/**",
+                        "/api/auth/logout",
                         "/api/auth/login").permitAll()
                 .requestMatchers(
                         "/producto/crear",

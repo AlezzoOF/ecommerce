@@ -1,10 +1,12 @@
 package com.idos.apk.backend.tienda.tatuajes.security;
 
+import com.idos.apk.backend.tienda.tatuajes.service.interfaces.IBlackListService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,9 +18,11 @@ import java.io.IOException;
 
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
-    private JWTGenerator jwtGenerator;
+    private  JWTGenerator jwtGenerator;
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private  CustomUserDetailsService customUserDetailsService;
+    @Autowired
+    private  IBlackListService blackListService;
 
 
     @Override
@@ -27,7 +31,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = getJWTFromRequest(request);
         //manar a llamar al black list
-        if (StringUtils.hasText(token) && jwtGenerator.validateToken(token)) {
+        if (StringUtils.hasText(token) && jwtGenerator.validateToken(token) && !blackListService.exist(token)){
             String username = jwtGenerator.getUsernameFromJwt(token);
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
