@@ -3,6 +3,7 @@ package com.idos.apk.backend.tienda.tatuajes.controller;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.OrdenNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.detalleorden.DetalleOrdenDto;
+import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenAdmin;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoIn;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoOut;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenPorAgno;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -45,14 +47,27 @@ public class OrdenController {
 
     @GetMapping("/mostrar")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity mostrarPorUsuario(@RequestParam String token) throws UsernameNotFoundException {
-        return new ResponseEntity<>(service.getAllByUser(token), HttpStatus.OK);
+    public List<OrdenDtoOut> mostrarPorUsuario(@RequestParam String token) throws UsernameNotFoundException {
+        return service.getAllByUser(token);
     }
 
     @GetMapping("/mostrarTodo")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrdenDtoOut> mostrar() {
-        return service.getAll();
+    public List<OrdenAdmin> mostrar() {
+        List<OrdenAdmin>enviar = new ArrayList<>();
+        List<OrdenDtoOut> dto = service.getAll();
+        for(OrdenDtoOut out: dto){
+            enviar.add(OrdenAdmin.builder()
+                    .total(out.total())
+                    .fechaCreacion(out.fechaCreacion())
+                    .id_creador(out.id_creador())
+                    .numero(out.numero())
+                    .detalles(detalleOrdenService.getAllByOrden(out.numero()))
+                    .build());
+        }
+
+
+        return enviar;
     }
 
     @GetMapping("/mostrarTodoFecha")

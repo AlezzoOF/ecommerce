@@ -10,6 +10,6 @@ public interface DetalleOrdenService {
 
     DetalleOrdenDtoOne findOne(String id);
 
-    List<DetalleOrdenDto> getAllByOrden(String num);
+    List<DetalleOrdenDtoOne> getAllByOrden(String num);
 
 }

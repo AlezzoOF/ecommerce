@@ -70,14 +70,16 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
     }
 
     @Override
-    public List<DetalleOrdenDto> getAllByOrden(String num) throws OrdenNotFoundException {
+    public List<DetalleOrdenDtoOne> getAllByOrden(String num) throws OrdenNotFoundException {
         Orden orden = ordenRepository.findById(num).orElseThrow(() -> new OrdenNotFoundException("Orden no encontrada"));
-        List<DetalleOrdenDto> enviar = repository.findAllByOrden_id(orden.getId()).stream().map(p -> mapper(p)).collect(Collectors.toList());
+        List<DetalleOrdenDtoOne> enviar = repository.findAllByOrden_id(orden.getId()).stream().map(p -> mapper(p)).collect(Collectors.toList());
         return enviar;
     }
 
-    private DetalleOrdenDto mapper(DetalleOrden detalleOrden) {
-        DetalleOrdenDto enviar = new DetalleOrdenDto(detalleOrden.getCantidad(), detalleOrden.getId(), detalleOrden.getTotal());
-        return enviar;
+    private DetalleOrdenDtoOne mapper(DetalleOrden detalleOrden) {
+        Producto p = detalleOrden.getProducto();
+        ProductoDTOOut enviar = new ProductoDTOOut(p.getId(), p.getNombre(), p.getDescripcion(), p.getPrecio(), p.getTipo().getName(), p.getCantidad(), p.getImg());
+        DetalleOrdenDtoOne ok = new DetalleOrdenDtoOne(detalleOrden.getCantidad(), enviar, detalleOrden.getTotal());
+        return ok;
     }
 }
