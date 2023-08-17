@@ -3,10 +3,7 @@ package com.idos.apk.backend.tienda.tatuajes.controller;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.OrdenNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.detalleorden.DetalleOrdenDto;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenAdmin;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoIn;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoOut;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenPorAgno;
+import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.*;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.DetalleOrdenService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.OrdenService;
 import org.springframework.http.HttpStatus;
@@ -47,8 +44,18 @@ public class OrdenController {
 
     @GetMapping("/mostrar")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrdenDtoOut> mostrarPorUsuario(@RequestParam String token) throws UsernameNotFoundException {
-        return service.getAllByUser(token);
+    public List<OrdenUser> mostrarPorUsuario(@RequestParam String token) throws UsernameNotFoundException {
+        List<OrdenUser> enviar = new ArrayList<>();
+        List<OrdenDtoOut> dto = service.getAllByUser(token);
+        for (OrdenDtoOut out: dto){
+            enviar.add(OrdenUser.builder()
+                    .total(out.total())
+                    .fechaCreacion(out.fechaCreacion())
+                    .numero(out.numero())
+                    .detalles(detalleOrdenService.getAllByOrden(out.numero()))
+                    .build());
+        }
+        return enviar;
     }
 
     @GetMapping("/mostrarTodo")

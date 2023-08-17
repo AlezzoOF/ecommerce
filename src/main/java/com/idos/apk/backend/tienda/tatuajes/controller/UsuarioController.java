@@ -5,6 +5,7 @@ import com.idos.apk.backend.tienda.tatuajes.model.dto.user.UsuarioEdit;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class UsuarioController {
     public List<UserDtoOut> getAll() {
         return service.getAll();
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserDtoOut editRol(@RequestBody UsuarioEdit edit, @PathVariable String id) throws UsernameNotFoundException {

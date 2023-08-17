@@ -1,9 +1,7 @@
 package com.idos.apk.backend.tienda.tatuajes.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
@@ -14,8 +12,9 @@ import java.util.List;
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access= AccessLevel.PRIVATE, force=true)
 @Table(name = "ordenes")
+@Builder
 public class Orden {
     @Id
     @GenericGenerator(name = "uuid2", strategy = "uuid2")

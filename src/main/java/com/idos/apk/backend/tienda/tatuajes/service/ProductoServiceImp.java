@@ -124,9 +124,9 @@ public class ProductoServiceImp implements ProductoService {
     @Override
     public void delete(String id, HttpServletRequest request) throws ProductoNotFoundException {
         String url = request.getRequestURL().toString().replace(request.getRequestURI(), "") + "/files/";
-        Producto p = repository.findById(id)
-                .orElseThrow(() -> new ProductoNotFoundException("No se pudo eliminar"));
-        storageService.loadResource(p.getImg().replace(url,""));
+        String p = repository.findById(id)
+                .orElseThrow(() -> new ProductoNotFoundException("No se pudo eliminar")).getImg();
+        storageService.loadResource(p.replace(url,""));
         repository.deleteById(id);
     }
 

@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component;
 public class OrdenDtoInInToOrden implements Mapper<OrdenDtoIn, Orden> {
     @Override
     public Orden map(OrdenDtoIn in) {
-        Orden nueva = new Orden();
-        nueva.setTotal(in.total());
-        return nueva;
+        return Orden.builder()
+                .total(in.total()).build();
     }
 }
