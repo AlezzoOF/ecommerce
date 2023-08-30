@@ -1,14 +1,13 @@
 package com.idos.apk.backend.tienda.tatuajes.controller;
 
 import com.idos.apk.backend.tienda.tatuajes.exceptions.DataAllreadyTaken;
+import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.AuthResponse;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.LoginDto;
 import com.idos.apk.backend.tienda.tatuajes.model.dto.user.RegisterDto;
 import com.idos.apk.backend.tienda.tatuajes.security.JWTGenerator;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.IBlackListService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.UsuarioService;
-import io.jsonwebtoken.JwtException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,8 +51,8 @@ public class AuthController {
                         loginDto.pwd()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = generator.generateToken(authentication);
-        String rol = service.valid(loginDto.userName()).getRol();
-        return new ResponseEntity<>(new AuthResponse(token, "Bearer", rol), HttpStatus.OK);
+        Usuario user = service.valid(loginDto.userName());
+        return new ResponseEntity<>(new AuthResponse(token, "Bearer", user.getRol(),user.getEmail(), user.getNombre(), user.getApellido() ), HttpStatus.OK);
 
     }
 
