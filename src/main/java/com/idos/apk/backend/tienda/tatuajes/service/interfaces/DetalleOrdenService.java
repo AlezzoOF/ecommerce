@@ -1,15 +1,16 @@
 package com.idos.apk.backend.tienda.tatuajes.service.interfaces;
 
-import com.idos.apk.backend.tienda.tatuajes.model.dto.detalleorden.DetalleOrdenDto;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.detalleorden.DetalleOrdenDtoOne;
+import com.idos.apk.backend.tienda.tatuajes.dto.detalle.DetalleOrdenDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.detalle.OneDetalleOrdenDto;
+
 
 import java.util.List;
 
 public interface DetalleOrdenService {
     DetalleOrdenDto save(DetalleOrdenDto objeto, String numeroOrden);
 
-    DetalleOrdenDtoOne findOne(String id);
+    OneDetalleOrdenDto findOne(String id);
 
-    List<DetalleOrdenDtoOne> getAllByOrden(String num);
+    List<OneDetalleOrdenDto> getAllByOrden(String num);
 
 }

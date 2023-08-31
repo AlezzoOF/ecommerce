@@ -1,24 +1,24 @@
 package com.idos.apk.backend.tienda.tatuajes.service.interfaces;
 
-import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoIn;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoOut;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenPorAgno;
+import com.idos.apk.backend.tienda.tatuajes.dto.orden.OrdenAgnoDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.orden.OrdenInDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.orden.OrdenOutDto;
 
 import java.util.List;
 
 public interface OrdenService {
-    OrdenDtoOut save(OrdenDtoIn objeto);
+    OrdenOutDto save(OrdenInDto objeto);
 
-    List<OrdenDtoOut> getAllByUser(String token);
+    List<OrdenOutDto> getAllByUser(String token);
 
-    List<OrdenDtoOut> getAll();
+    List<OrdenOutDto> getAll();
 
-    List<OrdenDtoOut> getAllByDate(int mes, String agno);
+    List<OrdenOutDto> getAllByDate(int mes, String agno);
 
-    List<OrdenDtoOut> getAllByUserAdmin(String id);
+    List<OrdenOutDto> getAllByUserAdmin(String id);
 
 
     void delete(String id);
 
-    OrdenPorAgno filtroMes(String agno);
+    OrdenAgnoDto filtroMes(String agno);
 }

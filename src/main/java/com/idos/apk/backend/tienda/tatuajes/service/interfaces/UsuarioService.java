@@ -1,9 +1,9 @@
 package com.idos.apk.backend.tienda.tatuajes.service.interfaces;
 
+import com.idos.apk.backend.tienda.tatuajes.dto.user.RegisterDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.user.UserEditDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.user.UserOutDto;
 import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.user.RegisterDto;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.user.UserDtoOut;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.user.UsuarioEdit;
 
 import java.util.List;
 
@@ -14,17 +14,17 @@ public interface UsuarioService {
 
     Usuario valid(String email);
 
-    UserDtoOut findByEmail(String email);
+    UserOutDto findByEmail(String email);
 
 
     Boolean existsByEmail(String email);
 
-    List<UserDtoOut> getAll();
+    List<UserOutDto> getAll();
 
-    UserDtoOut edit(UsuarioEdit edit, String id);
+    UserOutDto edit(UserEditDto edit, String id);
 
     void deleteById(String id);
     void deleteByToken(String token);
 
-    UserDtoOut findOneById(String id);
+    UserOutDto findOneById(String id);
 }

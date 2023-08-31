@@ -1,11 +1,11 @@
 package com.idos.apk.backend.tienda.tatuajes.controller;
 
 
+import com.idos.apk.backend.tienda.tatuajes.dto.producto.ProductoInDto;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.DataAllreadyTaken;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.FiltroProducto;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOIn;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoPageableResponse;
+import com.idos.apk.backend.tienda.tatuajes.dto.producto.FiltroProducto;
+import com.idos.apk.backend.tienda.tatuajes.dto.producto.ProductoPageableResponse;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.ProductoService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ public class ProductoController {
                                @RequestParam("tipo") String tipo,
                                @RequestParam("file") MultipartFile file) throws DataAllreadyTaken {
 
-        ProductoDTOIn producto = new ProductoDTOIn(nombre, descripcion, precio, cantidad, tipo);
+        ProductoInDto producto = new ProductoInDto(nombre, descripcion, precio, cantidad, tipo);
 
         return new ResponseEntity<>(service.save(producto, file, request), HttpStatus.CREATED);
 
@@ -57,7 +57,7 @@ public class ProductoController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity update(@RequestBody @Validated ProductoDTOIn producto, @PathVariable("id") String id) throws ProductoNotFoundException {
+    public ResponseEntity update(@RequestBody @Validated ProductoInDto producto, @PathVariable("id") String id) throws ProductoNotFoundException {
         return new ResponseEntity<>(service.update(producto, id, request), HttpStatus.OK);
 
     }

@@ -1,10 +1,10 @@
 package com.idos.apk.backend.tienda.tatuajes.controller;
 
+import com.idos.apk.backend.tienda.tatuajes.dto.user.AuthResponse;
+import com.idos.apk.backend.tienda.tatuajes.dto.user.LoginDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.user.RegisterDto;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.DataAllreadyTaken;
 import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.user.AuthResponse;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.user.LoginDto;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.user.RegisterDto;
 import com.idos.apk.backend.tienda.tatuajes.security.JWTGenerator;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.IBlackListService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.UsuarioService;
@@ -47,11 +47,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody @Validated LoginDto loginDto) throws UsernameNotFoundException {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginDto.userName(),
-                        loginDto.pwd()));
+                new UsernamePasswordAuthenticationToken(loginDto.getUserName(),
+                        loginDto.getPwd()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = generator.generateToken(authentication);
-        Usuario user = service.valid(loginDto.userName());
+        Usuario user = service.valid(loginDto.getUserName());
         return new ResponseEntity<>(new AuthResponse(token, "Bearer", user.getRol(),user.getEmail(), user.getNombre(), user.getApellido() ), HttpStatus.OK);
 
     }

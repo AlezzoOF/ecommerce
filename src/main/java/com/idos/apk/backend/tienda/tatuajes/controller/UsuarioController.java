@@ -1,7 +1,7 @@
 package com.idos.apk.backend.tienda.tatuajes.controller;
 
-import com.idos.apk.backend.tienda.tatuajes.model.dto.user.UserDtoOut;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.user.UsuarioEdit;
+import com.idos.apk.backend.tienda.tatuajes.dto.user.UserEditDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.user.UserOutDto;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,13 +19,13 @@ public class UsuarioController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDtoOut> getAll() {
+    public List<UserOutDto> getAll() {
         return service.getAll();
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDtoOut editRol(@RequestBody UsuarioEdit edit, @PathVariable String id) throws UsernameNotFoundException {
+    public UserOutDto editRol(@RequestBody UserEditDto edit, @PathVariable String id) throws UsernameNotFoundException {
         return service.edit(edit, id);
     }
 
@@ -37,7 +37,7 @@ public class UsuarioController {
 
     @GetMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDtoOut findOneById(@PathVariable String id)throws UsernameNotFoundException{
+    public UserOutDto findOneById(@PathVariable String id)throws UsernameNotFoundException{
        return service.findOneById(id);
     }
 }
