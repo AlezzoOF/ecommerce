@@ -33,7 +33,7 @@ public class Usuario {
     @Column(nullable = false, length = 100)
     private String pwd;
 
-    private boolean enable;
+    private Boolean enable;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Orden> ordenes = new ArrayList<>();

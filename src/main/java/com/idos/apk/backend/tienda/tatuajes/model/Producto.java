@@ -3,6 +3,7 @@ package com.idos.apk.backend.tienda.tatuajes.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Producto {
     @Id
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -28,17 +30,17 @@ public class Producto {
     private String img;
 
     @Column(nullable = false, length = 100)
-    private double precio;
+    private Double precio;
 
     @Column(nullable = false, length = 100)
     @Min(0)
-    private int cantidad;
+    private Integer cantidad;
 
     @ManyToOne
     @JoinColumn(name = "tipoProductoId")
     private TipoProducto tipo;
 
-    private boolean enable = true;
+    private Boolean enable = true;
 
 
 }
