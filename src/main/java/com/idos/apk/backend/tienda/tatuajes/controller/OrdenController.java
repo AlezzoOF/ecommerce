@@ -1,9 +1,9 @@
 package com.idos.apk.backend.tienda.tatuajes.controller;
 
+import com.idos.apk.backend.tienda.tatuajes.dto.detalle.DetalleOrdenInDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.orden.*;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.OrdenNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.detalleorden.DetalleOrdenDto;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.*;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.DetalleOrdenService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.OrdenService;
 import org.springframework.http.HttpStatus;
@@ -33,9 +33,9 @@ public class OrdenController {
 
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity crear(@RequestBody @Validated OrdenDtoIn orden) throws UsernameNotFoundException, ProductoNotFoundException {
-        String id = service.save(orden).numero();
-        for (DetalleOrdenDto detalle : orden.lista()) {
+    public ResponseEntity crear(@RequestBody @Validated OrdenInDto orden) throws UsernameNotFoundException, ProductoNotFoundException {
+        String id = service.save(orden).getNumero();
+        for (DetalleOrdenInDto detalle : orden.getLista()) {
             detalleOrdenService.save(detalle, id);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -44,15 +44,15 @@ public class OrdenController {
 
     @GetMapping("/mostrar")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrdenUser> mostrarPorUsuario(@RequestParam String token) throws UsernameNotFoundException {
-        List<OrdenUser> enviar = new ArrayList<>();
-        List<OrdenDtoOut> dto = service.getAllByUser(token);
-        for (OrdenDtoOut out: dto){
-            enviar.add(OrdenUser.builder()
-                    .total(out.total())
-                    .fechaCreacion(out.fechaCreacion())
-                    .numero(out.numero())
-                    .detalles(detalleOrdenService.getAllByOrden(out.numero()))
+    public List<OrdenUserDto> mostrarPorUsuario(@RequestParam String token) throws UsernameNotFoundException {
+        List<OrdenUserDto> enviar = new ArrayList<>();
+        List<OrdenOutDto> dto = service.getAllByUser(token);
+        for (OrdenOutDto out: dto){
+            enviar.add(OrdenUserDto.builder()
+                    .total(out.getTotal())
+                    .fechaCreacion(out.getFechaCreacion())
+                    .numero(out.getNumero())
+                    .detalles(detalleOrdenService.getAllByOrden(out.getNumero()))
                     .build());
         }
         return enviar;
@@ -60,16 +60,16 @@ public class OrdenController {
 
     @GetMapping("/mostrarTodo")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrdenAdmin> mostrar() {
-        List<OrdenAdmin>enviar = new ArrayList<>();
-        List<OrdenDtoOut> dto = service.getAll();
-        for(OrdenDtoOut out: dto){
-            enviar.add(OrdenAdmin.builder()
-                    .total(out.total())
-                    .fechaCreacion(out.fechaCreacion())
-                    .id_creador(out.id_creador())
-                    .numero(out.numero())
-                    .detalles(detalleOrdenService.getAllByOrden(out.numero()))
+    public List<OrdenAdminDto> mostrar() {
+        List<OrdenAdminDto>enviar = new ArrayList<>();
+        List<OrdenOutDto> dto = service.getAll();
+        for(OrdenOutDto out: dto){
+            enviar.add(OrdenAdminDto.builder()
+                    .total(out.getTotal())
+                    .fechaCreacion(out.getFechaCreacion())
+                    .id_creador(out.getId_creador())
+                    .numero(out.getNumero())
+                    .detalles(detalleOrdenService.getAllByOrden(out.getNumero()))
                     .build());
         }
 
@@ -79,14 +79,14 @@ public class OrdenController {
 
     @GetMapping("/mostrarTodoFecha")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrdenDtoOut> mostrarPorFecha(@RequestParam("mes")int mes,
+    public List<OrdenOutDto> mostrarPorFecha(@RequestParam("mes")int mes,
                                              @RequestParam("Agno")String agno) {
         return service.getAllByDate(mes, agno);
     }
 
     @GetMapping("/mostrarId/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrdenDtoOut> mostrarPorUserId(@PathVariable("id") String id){
+    public List<OrdenOutDto> mostrarPorUserId(@PathVariable("id") String id){
        return service.getAllByUserAdmin(id);
     }
 
@@ -98,7 +98,7 @@ public class OrdenController {
 
     @GetMapping("/tabla")
     @ResponseStatus(HttpStatus.OK)
-    public OrdenPorAgno tabla(){
+    public OrdenAgnoDto tabla(){
         String agno = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
         return service.filtroMes(agno);
     }

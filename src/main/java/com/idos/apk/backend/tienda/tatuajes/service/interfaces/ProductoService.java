@@ -1,21 +1,21 @@
 package com.idos.apk.backend.tienda.tatuajes.service.interfaces;
 
-import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.FiltroProducto;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOIn;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoDTOOut;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.producto.ProductoPageableResponse;
+import com.idos.apk.backend.tienda.tatuajes.dto.producto.FiltroProducto;
+import com.idos.apk.backend.tienda.tatuajes.dto.producto.ProductoInDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.producto.ProductoOutDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.producto.ProductoPageableResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ProductoService {
-    ProductoDTOOut save(ProductoDTOIn objeto, MultipartFile file, HttpServletRequest request);
+    ProductoOutDto save(ProductoInDto objeto, MultipartFile file, HttpServletRequest request);
 
 
     ProductoPageableResponse getAll(int pageNo, int pageSize);
 
-    ProductoDTOOut getById(String id) throws RuntimeException;
+    ProductoOutDto getById(String id) throws RuntimeException;
 
-    ProductoDTOOut update(ProductoDTOIn producto, String id, HttpServletRequest request);
+    ProductoOutDto update(ProductoInDto producto, String id, HttpServletRequest request);
 
     void delete(String id, HttpServletRequest request );
 

@@ -28,12 +28,15 @@ public class Orden {
 
     private String agno;
 
-    private int mes;
+    private Integer mes;
+
     @Column(nullable = false, length = 20)
-    private double total;
+    private Double total;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "orden", orphanRemoval = true)
     private List<DetalleOrden> detalle = new ArrayList<>();
 

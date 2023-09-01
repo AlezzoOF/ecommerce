@@ -1,14 +1,13 @@
 package com.idos.apk.backend.tienda.tatuajes.service;
 
+import com.idos.apk.backend.tienda.tatuajes.dto.orden.OrdenAgnoDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.orden.OrdenInDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.orden.OrdenMesDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.orden.OrdenOutDto;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.OrdenNotFoundException;
+import com.idos.apk.backend.tienda.tatuajes.mapper.OrdenMapper;
 import com.idos.apk.backend.tienda.tatuajes.model.Orden;
 import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoIn;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenDtoOut;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenPorAgno;
-import com.idos.apk.backend.tienda.tatuajes.model.dto.orden.OrdenPorMes;
-import com.idos.apk.backend.tienda.tatuajes.model.mapper.orden.OrdenDtoInInToOrden;
-import com.idos.apk.backend.tienda.tatuajes.model.mapper.orden.OrdenInToOrdenDto;
 import com.idos.apk.backend.tienda.tatuajes.repository.OrdenRepository;
 import com.idos.apk.backend.tienda.tatuajes.repository.ProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.repository.UsuarioRepository;
@@ -16,82 +15,69 @@ import com.idos.apk.backend.tienda.tatuajes.security.JWTGenerator;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.DetalleOrdenService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.OrdenService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
+@RequiredArgsConstructor
 public class OrdenServiceImp implements OrdenService {
 
     private final OrdenRepository repository;
     private final DetalleOrdenService serviceDetalle;
-    private final OrdenInToOrdenDto mapper;
-    private final OrdenDtoInInToOrden mapper2;
+    private final OrdenMapper mapper;
     private final ProductoRepository productoRepository;
     private final UsuarioRepository usuarioRepository;
     private final JWTGenerator generator;
 
-    public OrdenServiceImp(OrdenRepository repository, DetalleOrdenService serviceDetalle, OrdenInToOrdenDto mapper, OrdenDtoInInToOrden mapper2, ProductoRepository productoRepository, UsuarioRepository usuarioRepository, JWTGenerator generator) {
-        this.repository = repository;
-        this.serviceDetalle = serviceDetalle;
-        this.mapper = mapper;
-        this.mapper2 = mapper2;
-        this.productoRepository = productoRepository;
-        this.usuarioRepository = usuarioRepository;
-        this.generator = generator;
-    }
+
 
 
     @Override
     @Transactional
-    public OrdenDtoOut save(OrdenDtoIn objeto) throws UsernameNotFoundException {
-        String email = generator.getUsernameFromJwt(objeto.token());
+    public OrdenOutDto save(OrdenInDto objeto) throws UsernameNotFoundException {
+        String email = generator.getUsernameFromJwt(objeto.getToken());
         Usuario user = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no válido"));
 
-        Orden nueva = mapper2.map(objeto);
+        Orden nueva = mapper.ordenInToOrden(objeto);
         nueva.setUsuario(user);
-        Orden guardada = repository.save(nueva);
-        return mapper.map(guardada);
+        return mapper.ordenToOrdenOut(repository.save(nueva));
     }
 
     @Override
-    public List<OrdenDtoOut> getAllByUser(String token) throws UsernameNotFoundException {
+    public List<OrdenOutDto> getAllByUser(String token) throws UsernameNotFoundException {
         String email = generator.getUsernameFromJwt(token);
         Usuario user = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        List<Orden> lista = repository.findAllByUsuario_id(user.getId());
-        return lista.stream()
-                .map(mapper::map)
+        return repository.findAllByUsuario_id(user.getId()).stream()
+                .map(mapper::ordenToOrdenOut)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrdenDtoOut> getAll() {
-        List<Orden> lista = repository.findAll();
-        return lista.stream()
-                .map(mapper::map)
+    public List<OrdenOutDto> getAll() {
+        return repository.findAll().stream()
+                .map(mapper::ordenToOrdenOut)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrdenDtoOut> getAllByDate(int mes, String agno) {
-        List<Orden> lista = repository.findAllByMesAndAgno(mes, agno);
-        return lista.stream()
-                .map(mapper::map)
+    public List<OrdenOutDto> getAllByDate(int mes, String agno) {
+        return repository.findAllByMesAndAgno(mes, agno).stream()
+                .map(mapper::ordenToOrdenOut)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrdenDtoOut> getAllByUserAdmin(String id) {
-        List<Orden> lista = repository.findAllByUsuario_id(id);
-        return lista.stream()
-                .map(mapper::map)
+    public List<OrdenOutDto> getAllByUserAdmin(String id) {
+        return repository.findAllByUsuario_id(id).stream()
+                .map(mapper::ordenToOrdenOut)
                 .collect(Collectors.toList());
     }
 
@@ -104,15 +90,15 @@ public class OrdenServiceImp implements OrdenService {
     }
 
     @Override
-    public OrdenPorAgno filtroMes(String agno) {
-        List<OrdenPorMes> lista2 = IntStream.rangeClosed(1, 12)
+    public OrdenAgnoDto filtroMes(String agno) {
+        List<OrdenMesDto> lista2 = IntStream.rangeClosed(1, 12)
                 .mapToObj(i -> {
                     List<Orden> lista = repository.findAllByMesAndAgno(i, agno);
                     double totalMes = lista.stream()
                             .mapToDouble(Orden::getTotal)
                             .sum();
                     double porciento = getPorciento(lista.size());
-                    return OrdenPorMes.builder()
+                    return OrdenMesDto.builder()
                             .cantOrdenes(lista.size())
                             .totalMes(totalMes)
                             .mes(i)
@@ -126,7 +112,7 @@ public class OrdenServiceImp implements OrdenService {
                 .mapToDouble(Orden::getTotal)
                 .sum();
 
-        return OrdenPorAgno.builder()
+        return OrdenAgnoDto.builder()
                 .totalOrd(totalOrd)
                 .totalDinero(totalDinero)
                 .lista(lista2)

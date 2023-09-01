@@ -2,6 +2,7 @@ package com.idos.apk.backend.tienda.tatuajes.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "detalle_ordenes")
 public class DetalleOrden {
     @Id
@@ -18,9 +20,9 @@ public class DetalleOrden {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
     @Column(nullable = false, length = 10)
-    private int cantidad;
+    private Integer cantidad;
     @Column(nullable = false, length = 20)
-    private double total;
+    private Double total;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orden_id")
     private Orden orden;
