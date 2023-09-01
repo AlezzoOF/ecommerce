@@ -1,6 +1,6 @@
 package com.idos.apk.backend.tienda.tatuajes.dto.orden;
 
-import com.idos.apk.backend.tienda.tatuajes.dto.detalle.DetalleOrdenDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.detalle.DetalleOrdenInDto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.List;
 public class OrdenInDto {
     @NotNull(message = "No puede ser nulo")
     @NotEmpty(message = "No puede ser vacio")
-    private List<DetalleOrdenDto> lista;
+    private List<DetalleOrdenInDto> lista;
     @NotNull(message = "No puede ser nulo")
     @NotEmpty(message = "No puede ser vacio")
     private String token;

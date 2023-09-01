@@ -1,6 +1,6 @@
 package com.idos.apk.backend.tienda.tatuajes.controller;
 
-import com.idos.apk.backend.tienda.tatuajes.dto.detalle.DetalleOrdenDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.detalle.DetalleOrdenInDto;
 import com.idos.apk.backend.tienda.tatuajes.dto.orden.*;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.OrdenNotFoundException;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.ProductoNotFoundException;
@@ -35,7 +35,7 @@ public class OrdenController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity crear(@RequestBody @Validated OrdenInDto orden) throws UsernameNotFoundException, ProductoNotFoundException {
         String id = service.save(orden).getNumero();
-        for (DetalleOrdenDto detalle : orden.getLista()) {
+        for (DetalleOrdenInDto detalle : orden.getLista()) {
             detalleOrdenService.save(detalle, id);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);

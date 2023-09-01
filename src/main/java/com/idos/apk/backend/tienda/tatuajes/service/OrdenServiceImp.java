@@ -46,8 +46,7 @@ public class OrdenServiceImp implements OrdenService {
 
         Orden nueva = mapper.ordenInToOrden(objeto);
         nueva.setUsuario(user);
-        Orden guardada = repository.save(nueva);
-        return mapper.ordenToOrdenOut(guardada);
+        return mapper.ordenToOrdenOut(repository.save(nueva));
     }
 
     @Override

@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DetalleOrdenDto {
+public class DetalleOrdenInDto {
 
     @NotNull(message = "No puede ser nulo")
-    private int cantidad;
+    private Integer cantidad;
     @NotNull(message = "No puede ser nulo")
     @NotEmpty(message = "No puede ser vacio")
     private String id_producto;

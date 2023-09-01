@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Mapper(componentModel = "spring")
 public interface ProductoMapper {
 
-    ProductoMapper INSTANCE = Mappers.getMapper( ProductoMapper.class );
     @Mapping(source = "tipo", target = "tipo", qualifiedByName = "mapTipoProductoToString")
     ProductoOutDto productoToProductoDtoOut(Producto producto);
     @Mapping(source = "tipo", target = "tipo", qualifiedByName = "mapTipoStringToTipoProducto")

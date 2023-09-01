@@ -1,6 +1,6 @@
 package com.idos.apk.backend.tienda.tatuajes.dto.orden;
 
-import com.idos.apk.backend.tienda.tatuajes.dto.detalle.OneDetalleOrdenDto;
+import com.idos.apk.backend.tienda.tatuajes.dto.detalle.DetalleOrdenOutDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +17,5 @@ public class OrdenUserDto {
     private double total;
     private String numero;
     private LocalDate fechaCreacion;
-    private List<OneDetalleOrdenDto> detalles;
+    private List<DetalleOrdenOutDto> detalles;
 }

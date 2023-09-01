@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OneDetalleOrdenDto {
+public class DetalleOrdenOutDto {
     private Integer cantidad;
     private ProductoOutDto producto;
     private Double total;
