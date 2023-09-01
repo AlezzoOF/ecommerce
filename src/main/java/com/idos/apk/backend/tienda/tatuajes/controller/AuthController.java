@@ -52,7 +52,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = generator.generateToken(authentication);
         Usuario user = service.valid(loginDto.getUserName());
-        return new ResponseEntity<>(new AuthResponse(token, "Bearer", user.getRol(),user.getEmail(), user.getNombre(), user.getApellido() ), HttpStatus.OK);
+        return new ResponseEntity<>(new AuthResponse(token, "Bearer", user.getRol(),user.getEmail(), user.getNombre(), user.getApellido(), user.getId() ), HttpStatus.OK);
 
     }
 

@@ -16,25 +16,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UsuarioController {
     private final UsuarioService service;
-
+//    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<UserOutDto> getAll() {
         return service.getAll();
     }
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/id/{id}")
+
+//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PutMapping("/edit/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserOutDto editRol(@RequestBody UserEditDto edit, @PathVariable String id) throws UsernameNotFoundException {
         return service.edit(edit, id);
     }
-
+//    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteById(@PathVariable String id)throws UsernameNotFoundException{
         service.deleteById(id);
     }
-
+//    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserOutDto findOneById(@PathVariable String id)throws UsernameNotFoundException{
