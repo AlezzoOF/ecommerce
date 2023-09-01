@@ -18,9 +18,11 @@ public class OrdenInDto {
     @NotNull(message = "No puede ser nulo")
     @NotEmpty(message = "No puede ser vacio")
     private List<DetalleOrdenInDto> lista;
+
     @NotNull(message = "No puede ser nulo")
     @NotEmpty(message = "No puede ser vacio")
     private String token;
+
     @NotNull(message = "No puede ser nulo")
     private Double total;
 }

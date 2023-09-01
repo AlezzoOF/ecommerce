@@ -30,17 +30,17 @@ public class Producto {
     private String img;
 
     @Column(nullable = false, length = 100)
-    private double precio;
+    private Double precio;
 
     @Column(nullable = false, length = 100)
     @Min(0)
-    private int cantidad;
+    private Integer cantidad;
 
     @ManyToOne
     @JoinColumn(name = "tipoProductoId")
     private TipoProducto tipo;
 
-    private boolean enable = true;
+    private Boolean enable = true;
 
 
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class OrdenAdminDto {
-    private double total;
+    private Double total;
     private String numero;
     private LocalDate fechaCreacion;
     private String id_creador;

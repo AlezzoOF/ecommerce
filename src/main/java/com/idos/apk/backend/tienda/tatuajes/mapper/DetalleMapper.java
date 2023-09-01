@@ -8,9 +8,12 @@ import com.idos.apk.backend.tienda.tatuajes.model.Producto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface DetalleMapper {
+
+    ProductoMapper mapper = Mappers.getMapper( ProductoMapper.class );
 
     @Mapping(target = "producto", source = "id_producto", qualifiedByName = "mapIdToProducto")
     DetalleOrden detalleInToDetalle(DetalleOrdenInDto detalleOrden);
@@ -28,14 +31,6 @@ public interface DetalleMapper {
 
     @Named("mapProductoToProductoDto")
     default ProductoOutDto mapIdToProducto(Producto producto) {
-        return ProductoOutDto.builder()
-                .id(producto.getId())
-                .nombre(producto.getNombre())
-                .img(producto.getImg())
-                .tipo(producto.getTipo().getName())
-                .descripcion(producto.getDescripcion())
-                .cantidad(producto.getCantidad())
-                .precio(producto.getPrecio())
-                .build();
+        return mapper.productoToProductoDtoOut(producto);
     }
 }

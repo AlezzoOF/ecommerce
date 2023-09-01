@@ -28,7 +28,7 @@ public class Orden {
 
     private String agno;
 
-    private int mes;
+    private Integer mes;
 
     @Column(nullable = false, length = 20)
     private Double total;
