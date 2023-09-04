@@ -45,14 +45,21 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody @Validated LoginDto loginDto) throws UsernameNotFoundException {
+    public AuthResponse login(@RequestBody @Validated LoginDto loginDto) throws UsernameNotFoundException {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUserName(),
                         loginDto.getPwd()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = generator.generateToken(authentication);
         Usuario user = service.valid(loginDto.getUserName());
-        return new ResponseEntity<>(new AuthResponse(token, "Bearer", user.getRol(),user.getEmail(), user.getNombre(), user.getApellido(), user.getId() ), HttpStatus.OK);
+        return AuthResponse.builder()
+                .token(token)
+                .tokenType("Bearer")
+                .rol(user.getRol())
+                .username(user.getEmail())
+                .name(user.getNombre())
+                .last_name(user.getApellido())
+                .id(user.getId()).build();
 
     }
 

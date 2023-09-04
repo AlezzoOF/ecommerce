@@ -1,10 +1,12 @@
 package com.idos.apk.backend.tienda.tatuajes.mapper;
 
+import com.idos.apk.backend.tienda.tatuajes.dto.producto.ProductoInDto;
 import com.idos.apk.backend.tienda.tatuajes.dto.producto.ProductoOutDto;
 import com.idos.apk.backend.tienda.tatuajes.model.Producto;
 import com.idos.apk.backend.tienda.tatuajes.model.TipoProducto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,8 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class ProductoMapperTest {
-    @Autowired
-    ProductoMapper mapper;
+    private final ProductoMapper mapper = Mappers.getMapper(ProductoMapper.class);
 
     @Test
     void productoToProductoDtoOut() {
@@ -41,5 +42,27 @@ class ProductoMapperTest {
 
     @Test
     void productoInToProducto() {
+        ProductoInDto p = ProductoInDto.builder()
+                .nombre("prueba")
+                .precio(22.2)
+                .descripcion("prueba")
+                .cantidad(22)
+                .tipo("Prueba")
+                .build();
+
+        Producto producto  = mapper.productoInToProducto(p);
+
+        assertNotNull(producto);
+        assertEquals("prueba", producto.getNombre());
+        assertEquals("prueba", producto.getDescripcion());
+        assertEquals(22.2, producto.getPrecio());
+        assertEquals(22, producto.getCantidad());
+        assertEquals("Prueba", producto.getTipo().getName());
+        assertTrue(producto.isEnable());
+
+
+
+
+
     }
 }

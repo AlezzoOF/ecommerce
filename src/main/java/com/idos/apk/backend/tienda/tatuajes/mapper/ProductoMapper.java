@@ -4,14 +4,12 @@ import com.idos.apk.backend.tienda.tatuajes.dto.producto.ProductoInDto;
 import com.idos.apk.backend.tienda.tatuajes.dto.producto.ProductoOutDto;
 import com.idos.apk.backend.tienda.tatuajes.model.Producto;
 import com.idos.apk.backend.tienda.tatuajes.model.TipoProducto;
-import com.idos.apk.backend.tienda.tatuajes.repository.TipoProductoRepository;
-import lombok.RequiredArgsConstructor;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
+
 
 @Mapper(componentModel = "spring")
 public interface ProductoMapper {
