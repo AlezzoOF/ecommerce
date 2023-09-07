@@ -11,16 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-@ExtendWith(MockitoExtension.class)
+
 class OrdenTest {
 
     List<DetalleOrden> detalleOrdens = new ArrayList<>();
     Orden orden;
     @BeforeEach
     public void setup(){
-        orden = Orden.builder()
-                .id("PruebaOrden")
-                .build();
+  
         Producto producto1 = Producto.builder()
                 .id("Prueba")
                 .tipo(TipoProducto.builder().name("pruebaTipo").build())
@@ -33,20 +31,19 @@ class OrdenTest {
                 .total(22.2)
                 .cantidad(22)
                 .build();
-
-
-
+        
         detalleOrdens.add(detalleOrden1);
 
-    }
-    @Test
-    void testConstructorAndGetters() {
-        Orden orden =  Orden.builder()
+        orden =  Orden.builder()
                 .id("prueba")
                 .total(22.2)
                 .detalle(detalleOrdens)
                 .usuario(Usuario.builder().id("prueba").build())
                 .build();
+
+    }
+    @Test
+    void testGetters() {
         orden.prePersist();
 
         assertEquals("prueba", orden.getId());
@@ -59,16 +56,22 @@ class OrdenTest {
     }
 
     @Test
+    void testConstructor(){
+        Orden orden4 = new Orden("id", LocalDate.now(), "2023", 2, 22.22, Usuario.builder().id("prueba").build(), detalleOrdens);
+        
+        assertNotNull(orden4);
+        assertEquals("id", orden4.getId());
+        assertNotNull(orden4.getFechaCreacion());
+        assertEquals("2023", orden4.getAgno());
+        assertEquals(2, orden4.getMes());
+        assertEquals(22.22, orden4.getTotal());
+        assertEquals("prueba", orden4.getUsuario().getId());
+
+
+    }
+
+    @Test
     void testSetters() {
-        Orden orden =  Orden.builder()
-                .id("prueba")
-                .total(22.2)
-                .mes(12)
-                .agno("2121")
-                .fechaCreacion(LocalDate.of(2023, 8, 19))
-                .detalle(detalleOrdens)
-                .usuario(Usuario.builder().id("prueba").build())
-                .build();
 
         orden.setId("2");
         orden.setFechaCreacion(LocalDate.of(2023, 7, 19));
