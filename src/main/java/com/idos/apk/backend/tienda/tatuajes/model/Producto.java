@@ -2,15 +2,13 @@ package com.idos.apk.backend.tienda.tatuajes.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "productos")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -39,8 +37,7 @@ public class Producto {
     @ManyToOne
     @JoinColumn(name = "tipoProductoId")
     private TipoProducto tipo;
-
-    private Boolean enable = true;
-
+    @Builder.Default
+    private boolean enable = true;
 
 }

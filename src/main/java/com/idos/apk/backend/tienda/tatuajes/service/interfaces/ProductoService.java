@@ -19,11 +19,11 @@ public interface ProductoService {
 
     void delete(String id, HttpServletRequest request );
 
-    ProductoPageableResponse getAllByTipo(int pageNo, int pageSize, String tipo);
-
-    ProductoPageableResponse findAllByEnable(boolean bol, int pageNo, int pageSize);//Buscar los productos en stock
-
-    ProductoPageableResponse findByPrecioBetween(int pageNo, int pageSize, double precioMinimo, double precioMaximo);
+//    ProductoPageableResponse getAllByTipo(int pageNo, int pageSize, String tipo);
+//
+//    ProductoPageableResponse findAllByEnable(boolean bol, int pageNo, int pageSize);//Buscar los productos en stock
+//
+//    ProductoPageableResponse findByPrecioBetween(int pageNo, int pageSize, double precioMinimo, double precioMaximo);
 
     ///prueba
 

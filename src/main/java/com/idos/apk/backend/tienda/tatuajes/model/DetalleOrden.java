@@ -1,14 +1,12 @@
 package com.idos.apk.backend.tienda.tatuajes.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -19,13 +17,17 @@ public class DetalleOrden {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
+
     @Column(nullable = false, length = 10)
     private Integer cantidad;
+
     @Column(nullable = false, length = 20)
     private Double total;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orden_id")
     private Orden orden;
+
     @OneToOne
     private Producto producto;
 
