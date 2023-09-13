@@ -123,59 +123,59 @@ public class ProductoServiceImp implements ProductoService {
     }
 
     //Buscar todos los productos filtrando x tipo
-    @Override
-    public ProductoPageableResponse getAllByTipo(int pageNo, int pageSize, String tipo) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        TipoProducto tipoProducto = tipoProductoRepository.findByName(tipo)
-                .orElseThrow(() -> new TipoProductoNotFoundException("Tipo not found"));
-        Page<Producto> lista = repository.findByTipo(pageable, tipoProducto);
-        List<ProductoOutDto> content = lista.getContent().stream()
-                .map(mapper::productoToProductoDtoOut)
-                .collect(Collectors.toList());
-        ProductoPageableResponse response = new ProductoPageableResponse();
-        response.setContent(content);
-        response.setPageNo(lista.getNumber());
-        response.setPageSize(lista.getSize());
-        response.setTotalElements(lista.getTotalElements());
-        response.setTotalPages(lista.getTotalPages());
-        response.setLast(lista.isLast());
-        return response;
-    }
-
-    @Override
-    public ProductoPageableResponse findAllByEnable(boolean bol, int pageNo, int pageSize) {
-        Pageable pageable  = PageRequest.of(pageNo, pageSize);
-        Page<Producto> lista = repository.findByEnable(pageable, bol);
-        List<ProductoOutDto> content = lista.getContent().stream()
-                .map(mapper::productoToProductoDtoOut)
-                .collect(Collectors.toList());
-        ProductoPageableResponse response = new ProductoPageableResponse();
-        response.setContent(content);
-        response.setPageNo(lista.getNumber());
-        response.setPageSize(lista.getSize());
-        response.setTotalElements(lista.getTotalElements());
-        response.setTotalPages(lista.getTotalPages());
-        response.setLast(lista.isLast());
-        return response;
-    }
-
-    @Override
-    public ProductoPageableResponse findByPrecioBetween(int pageNo, int pageSize, double precioMinimo, double precioMaximo) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Producto> lista = repository.findByPrecioBetween(pageable, precioMinimo, precioMaximo);
-        List<ProductoOutDto> content = lista.getContent().stream()
-                .map(mapper::productoToProductoDtoOut)
-                .collect(Collectors.toList());
-        ProductoPageableResponse response = new ProductoPageableResponse();
-        response.setContent(content);
-        response.setPageNo(lista.getNumber());
-        response.setPageSize(lista.getSize());
-        response.setTotalElements(lista.getTotalElements());
-        response.setTotalPages(lista.getTotalPages());
-        response.setLast(lista.isLast());
-
-        return response;
-    }
+//    @Override
+//    public ProductoPageableResponse getAllByTipo(int pageNo, int pageSize, String tipo) {
+//        Pageable pageable = PageRequest.of(pageNo, pageSize);
+//        TipoProducto tipoProducto = tipoProductoRepository.findByName(tipo)
+//                .orElseThrow(() -> new TipoProductoNotFoundException("Tipo not found"));
+//        Page<Producto> lista = repository.findByTipo(pageable, tipoProducto);
+//        List<ProductoOutDto> content = lista.getContent().stream()
+//                .map(mapper::productoToProductoDtoOut)
+//                .collect(Collectors.toList());
+//        ProductoPageableResponse response = new ProductoPageableResponse();
+//        response.setContent(content);
+//        response.setPageNo(lista.getNumber());
+//        response.setPageSize(lista.getSize());
+//        response.setTotalElements(lista.getTotalElements());
+//        response.setTotalPages(lista.getTotalPages());
+//        response.setLast(lista.isLast());
+//        return response;
+//    }
+//
+//    @Override
+//    public ProductoPageableResponse findAllByEnable(boolean bol, int pageNo, int pageSize) {
+//        Pageable pageable  = PageRequest.of(pageNo, pageSize);
+//        Page<Producto> lista = repository.findByEnable(pageable, bol);
+//        List<ProductoOutDto> content = lista.getContent().stream()
+//                .map(mapper::productoToProductoDtoOut)
+//                .collect(Collectors.toList());
+//        ProductoPageableResponse response = new ProductoPageableResponse();
+//        response.setContent(content);
+//        response.setPageNo(lista.getNumber());
+//        response.setPageSize(lista.getSize());
+//        response.setTotalElements(lista.getTotalElements());
+//        response.setTotalPages(lista.getTotalPages());
+//        response.setLast(lista.isLast());
+//        return response;
+//    }
+//
+//    @Override
+//    public ProductoPageableResponse findByPrecioBetween(int pageNo, int pageSize, double precioMinimo, double precioMaximo) {
+//        Pageable pageable = PageRequest.of(pageNo, pageSize);
+//        Page<Producto> lista = repository.findByPrecioBetween(pageable, precioMinimo, precioMaximo);
+//        List<ProductoOutDto> content = lista.getContent().stream()
+//                .map(mapper::productoToProductoDtoOut)
+//                .collect(Collectors.toList());
+//        ProductoPageableResponse response = new ProductoPageableResponse();
+//        response.setContent(content);
+//        response.setPageNo(lista.getNumber());
+//        response.setPageSize(lista.getSize());
+//        response.setTotalElements(lista.getTotalElements());
+//        response.setTotalPages(lista.getTotalPages());
+//        response.setLast(lista.isLast());
+//
+//        return response;
+//    }
 
     ////prueba/////
 

@@ -4,8 +4,10 @@ import com.idos.apk.backend.tienda.tatuajes.dto.user.AuthResponse;
 import com.idos.apk.backend.tienda.tatuajes.dto.user.LoginDto;
 import com.idos.apk.backend.tienda.tatuajes.dto.user.RegisterDto;
 import com.idos.apk.backend.tienda.tatuajes.exceptions.DataAllreadyTaken;
+import com.idos.apk.backend.tienda.tatuajes.model.BlacklistedToken;
 import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
 import com.idos.apk.backend.tienda.tatuajes.security.JWTGenerator;
+import com.idos.apk.backend.tienda.tatuajes.security.SecurityConstants;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.IBlackListService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 
 @RestController
@@ -32,34 +36,45 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody @Validated RegisterDto registerDto) throws DataAllreadyTaken {
+    @ResponseStatus(HttpStatus.OK)
+    public void register(@RequestBody @Validated RegisterDto registerDto) throws DataAllreadyTaken {
         service.saveUser(registerDto);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/registerAdmin")
-    public ResponseEntity registerAdmin(@RequestBody @Validated RegisterDto registerDto) throws DataAllreadyTaken {
+    @ResponseStatus(HttpStatus.OK)
+    public void registerAdmin(@RequestBody @Validated RegisterDto registerDto) throws DataAllreadyTaken {
         service.saveUserLikeAdmin(registerDto);
-        return new ResponseEntity<>(HttpStatus.OK);
-
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody @Validated LoginDto loginDto) throws UsernameNotFoundException {
+    @ResponseStatus(HttpStatus.OK)
+    public AuthResponse login(@RequestBody @Validated LoginDto loginDto) throws UsernameNotFoundException {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUserName(),
                         loginDto.getPwd()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = generator.generateToken(authentication);
         Usuario user = service.valid(loginDto.getUserName());
-        return new ResponseEntity<>(new AuthResponse(token, "Bearer", user.getRol(),user.getEmail(), user.getNombre(), user.getApellido(), user.getId() ), HttpStatus.OK);
+        return AuthResponse.builder()
+                .token(token)
+                .tokenType("Bearer")
+                .rol(user.getRol())
+                .username(user.getEmail())
+                .name(user.getNombre())
+                .last_name(user.getApellido())
+                .id(user.getId()).build();
 
     }
 
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
     public void logout(@RequestBody String token){
-        blackListService.save(token);
+        BlacklistedToken blacklistedToken = new BlacklistedToken();
+        Date currentDate = new Date();
+        blacklistedToken.setToken(token);
+        blacklistedToken.setExpirationDate(new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION));
+        blackListService.save(blacklistedToken);
     }
 
 

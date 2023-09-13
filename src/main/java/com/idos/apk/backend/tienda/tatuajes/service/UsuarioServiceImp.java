@@ -32,6 +32,7 @@ public class UsuarioServiceImp implements UsuarioService {
     @Transactional
     public void saveUser(RegisterDto registerDto) throws DataAllreadyTaken {
         validateEmailNotExist(registerDto.getUserName());
+        registerDto.setPwd(passwordEncoder.encode(registerDto.getPwd()));
         Usuario user = mapper.registerDtoToUser(registerDto);
         user.setRol("USER");
         repository.save(user);
@@ -41,6 +42,7 @@ public class UsuarioServiceImp implements UsuarioService {
     @Transactional
     public void saveUserLikeAdmin(RegisterDto registerDto) throws DataAllreadyTaken {
         validateEmailNotExist(registerDto.getUserName());
+        registerDto.setPwd(passwordEncoder.encode(registerDto.getPwd()));
         Usuario user = mapper.registerDtoToUser(registerDto);
         user.setRol("ADMIN");
         repository.save(user);

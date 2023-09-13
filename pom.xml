@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.idos</groupId>
     <artifactId>apk.backend.tienda.tatuajes</artifactId>
-    <version>1.1.0</version>
+    <version>1.3.0</version>
     <name>apk.backend.tienda.tatuajes</name>
     <description>Demo project for Spring Boot</description>
     <properties>
@@ -18,6 +18,13 @@
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
     </properties>
     <dependencies>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
 <!--        mapstruct-->
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -157,8 +164,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source> <!-- depending on your project -->
-                    <target>1.8</target> <!-- depending on your project -->
+                    <source>9</source> <!-- depending on your project -->
+                    <target>9</target> <!-- depending on your project -->
                     <annotationProcessorPaths>
 
                         <path>

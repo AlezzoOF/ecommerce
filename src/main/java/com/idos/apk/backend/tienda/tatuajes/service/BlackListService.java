@@ -19,12 +19,8 @@ public class BlackListService implements IBlackListService {
     private final BlackListRepo repo;
 
     @Override
-    public BlacklistedToken save(String token){
-        BlacklistedToken blacklistedToken = new BlacklistedToken();
-        Date currentDate = new Date();
-        blacklistedToken.setToken(token);
-        blacklistedToken.setExpirationDate(new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION));
-        return repo.save(blacklistedToken);
+    public BlacklistedToken save(BlacklistedToken token){
+        return repo.save(token);
     }
 
     @Override

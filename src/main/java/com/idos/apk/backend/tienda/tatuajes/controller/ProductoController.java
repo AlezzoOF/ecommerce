@@ -70,38 +70,37 @@ public class ProductoController {
     }
 
 
-    @GetMapping("/tipo/{tipo}")
-    public ResponseEntity<ProductoPageableResponse> getProductosByTipo(
-            @PathVariable String tipo,
-            @RequestParam(defaultValue = "0") int pageNo,
-            @RequestParam(defaultValue = "10") int pageSize
-    ) {
-        ProductoPageableResponse response = service.getAllByTipo(pageNo, pageSize, tipo);
-        return ResponseEntity.ok(response);
-    }
+//    @GetMapping("/tipo/{tipo}")
+//    public ResponseEntity<ProductoPageableResponse> getProductosByTipo(
+//            @PathVariable String tipo,
+//            @RequestParam(defaultValue = "0") int pageNo,
+//            @RequestParam(defaultValue = "10") int pageSize
+//    ) {
+//        ProductoPageableResponse response = service.getAllByTipo(pageNo, pageSize, tipo);
+//        return ResponseEntity.ok(response);
+//    }
+//
+//    @GetMapping("/enable/{bol}")
+//    public ResponseEntity<ProductoPageableResponse> getProductosByEnable(
+//            @PathVariable boolean bol,
+//            @RequestParam(defaultValue = "0") int pageNo,
+//            @RequestParam(defaultValue = "10") int pageSize
+//    ) {
+//        ProductoPageableResponse response = service.findAllByEnable(bol, pageNo, pageSize);
+//        return ResponseEntity.ok(response);
+//    }
+//
+//    @GetMapping("/precio")
+//    public ResponseEntity<ProductoPageableResponse> getProductosByPrecioBetween(
+//            @RequestParam double precioMinimo,
+//            @RequestParam double precioMaximo,
+//            @RequestParam(defaultValue = "0") int pageNo,
+//            @RequestParam(defaultValue = "10") int pageSize
+//    ) {
+//        ProductoPageableResponse response = service.findByPrecioBetween(pageNo, pageSize, precioMinimo, precioMaximo);
+//        return ResponseEntity.ok(response);
+//    }
 
-    @GetMapping("/enable/{bol}")
-    public ResponseEntity<ProductoPageableResponse> getProductosByEnable(
-            @PathVariable boolean bol,
-            @RequestParam(defaultValue = "0") int pageNo,
-            @RequestParam(defaultValue = "10") int pageSize
-    ) {
-        ProductoPageableResponse response = service.findAllByEnable(bol, pageNo, pageSize);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/precio")
-    public ResponseEntity<ProductoPageableResponse> getProductosByPrecioBetween(
-            @RequestParam double precioMinimo,
-            @RequestParam double precioMaximo,
-            @RequestParam(defaultValue = "0") int pageNo,
-            @RequestParam(defaultValue = "10") int pageSize
-    ) {
-        ProductoPageableResponse response = service.findByPrecioBetween(pageNo, pageSize, precioMinimo, precioMaximo);
-        return ResponseEntity.ok(response);
-    }
-
-    //////Prueba/////
     @PostMapping("/productos/filtrar")
     public ProductoPageableResponse filtrarProductos(@RequestBody FiltroProducto filtro,
                                                      @RequestParam(defaultValue = "0") int pageNo,
