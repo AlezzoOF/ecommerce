@@ -1,7 +1,10 @@
-FROM openjdk:17-jdk-alpine
-COPY target/apk.backend.tienda.tatuajes-0.0.1-SNAPSHOT.jar java-app.jar
+FROM openjdk:19-jdk-alpine
+VOLUME /tmp
+VOLUME /tmp
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "java-app.jar"]
+ARG JAR_FILE=target/apk.backend.tienda.tatuajes-1.3.0.jar
+ADD ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
 
 # # Utiliza una imagen base de Maven para compilar tu aplicación
 # FROM openjdk:17-jdk-alpine
