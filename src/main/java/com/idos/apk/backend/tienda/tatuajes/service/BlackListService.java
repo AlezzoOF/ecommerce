@@ -2,8 +2,6 @@ package com.idos.apk.backend.tienda.tatuajes.service;
 
 import com.idos.apk.backend.tienda.tatuajes.model.BlacklistedToken;
 import com.idos.apk.backend.tienda.tatuajes.repository.BlackListRepo;
-import com.idos.apk.backend.tienda.tatuajes.security.JWTGenerator;
-import com.idos.apk.backend.tienda.tatuajes.security.SecurityConstants;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.IBlackListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;

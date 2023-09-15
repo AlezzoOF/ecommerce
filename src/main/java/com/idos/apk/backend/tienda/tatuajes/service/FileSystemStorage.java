@@ -37,7 +37,7 @@ public class FileSystemStorage implements StorageService {
             if (file.isEmpty()) {
                 throw new RuntimeException("File is null");
             }
-            String fileName = UUID.randomUUID().toString() + ".jpg";
+            String fileName = UUID.randomUUID() + ".jpg";
             Path destinationFile = rootLocation.resolve(Paths.get(fileName))
                     .normalize().toAbsolutePath();
 
@@ -53,7 +53,7 @@ public class FileSystemStorage implements StorageService {
     }
 
     @Override
-    public void loadResource(String filename) {
+    public void deleteFile(String filename) {
         try {
             Path file = rootLocation.resolve(filename);
             Files.delete(file);

@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -27,7 +25,6 @@ public class BlacklistedToken {
 
     @Column(name = "expiration_date", nullable = false)
     private Date expirationDate;
-
 
 
 }

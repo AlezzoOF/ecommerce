@@ -9,5 +9,5 @@ public interface StorageService {
 
     String store(MultipartFile file);
 
-    void loadResource(String filename);
+    void deleteFile(String filename);
 }

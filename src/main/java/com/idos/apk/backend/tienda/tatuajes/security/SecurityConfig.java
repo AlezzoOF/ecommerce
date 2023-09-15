@@ -6,7 +6,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -60,11 +59,12 @@ public class SecurityConfig {
                         "/orden/mostrarId/**",
                         "/producto/buscar/**",
                         "/producto/update/**",
+                        "/producto/updateImg/**",
                         "/producto/delete/**",
                         "/tp/**",
                         "/api/users/id/**",
                         "/api/auth/registerAdmin").hasAuthority("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/users" ).hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("ADMIN")
                 .requestMatchers(
                         "/orden/crear",
                         "/orden/mostrar",

@@ -7,10 +7,10 @@ import com.idos.apk.backend.tienda.tatuajes.exceptions.DataAllreadyTaken;
 import com.idos.apk.backend.tienda.tatuajes.model.BlacklistedToken;
 import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
 import com.idos.apk.backend.tienda.tatuajes.security.JWTGenerator;
-import com.idos.apk.backend.tienda.tatuajes.security.SecurityConstants;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.IBlackListService;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,6 +32,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JWTGenerator generator;
     private final IBlackListService blackListService;
+    @Value("${seurity.jwt.expiration}")
+    private Long expiration;
 
 
     @PostMapping("/register")
@@ -72,7 +74,7 @@ public class AuthController {
         BlacklistedToken blacklistedToken = new BlacklistedToken();
         Date currentDate = new Date();
         blacklistedToken.setToken(token);
-        blacklistedToken.setExpirationDate(new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION));
+        blacklistedToken.setExpirationDate(new Date(currentDate.getTime() + expiration));
         blackListService.save(blacklistedToken);
     }
 

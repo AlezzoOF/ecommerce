@@ -6,17 +6,16 @@ import com.idos.apk.backend.tienda.tatuajes.model.TipoProducto;
 import com.idos.apk.backend.tienda.tatuajes.repository.TipoProductoRepository;
 import com.idos.apk.backend.tienda.tatuajes.service.interfaces.TipoProductoService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TipoProductoServiceImp implements TipoProductoService {
     private final TipoProductoRepository repository;
 
-    public TipoProductoServiceImp(TipoProductoRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     @Transactional

@@ -27,7 +27,6 @@ public class UsuarioServiceImp implements UsuarioService {
     private final PasswordEncoder passwordEncoder;
 
 
-
     @Override
     @Transactional
     public void saveUser(RegisterDto registerDto) throws DataAllreadyTaken {
@@ -87,13 +86,13 @@ public class UsuarioServiceImp implements UsuarioService {
     }
 
     @Override
-    public void deleteById(String id)throws UsernameNotFoundException {
+    public void deleteById(String id) throws UsernameNotFoundException {
         Usuario user = getUserById(id);
         repository.deleteById(user.getId());
     }
 
     @Override
-    public void deleteByToken(String token)throws UsernameNotFoundException {
+    public void deleteByToken(String token) throws UsernameNotFoundException {
         String email = generator.getUsernameFromJwt(token);
         Usuario user = getUserByEmail(email);
         repository.deleteById(user.getId());
@@ -101,8 +100,8 @@ public class UsuarioServiceImp implements UsuarioService {
     }
 
     @Override
-    public UserOutDto findOneById(String id)throws UsernameNotFoundException {
-        return mapper.userToUserOut(repository.findById(id).orElseThrow(()->new UsernameNotFoundException("User not found")));
+    public UserOutDto findOneById(String id) throws UsernameNotFoundException {
+        return mapper.userToUserOut(repository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found")));
     }
 
     //Metodos auxiliares

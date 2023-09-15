@@ -2,6 +2,7 @@ package com.idos.apk.backend.tienda.tatuajes.security;
 
 import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
 import com.idos.apk.backend.tienda.tatuajes.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,20 +16,17 @@ import java.util.Collection;
 
 
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
     private final UsuarioRepository repository;
 
-    public CustomUserDetailsService(UsuarioRepository repository) {
-        this.repository = repository;
-    }
-
-
+//Metodo para cargar el usuario de la DB y combertirlo en un UserDetails
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario user = repository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new User(user.getEmail(), user.getPwd(), mapRolToAuthorities(user.getRol()));
     }
-
+//Genera una colleccion de las authorities del usuario cargado
     private Collection<GrantedAuthority> mapRolToAuthorities(String rol) {
 //        return roles.stream().map(rol -> new SimpleGrantedAuthority(rol.getName())).collect(Collectors.toList());
         Collection<GrantedAuthority> enviar = new ArrayList<>();
