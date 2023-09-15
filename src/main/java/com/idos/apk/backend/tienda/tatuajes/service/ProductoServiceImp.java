@@ -115,11 +115,15 @@ public class ProductoServiceImp implements ProductoService {
     //Borrar producto x id
     @Override
     public void delete(String id, HttpServletRequest request) throws ProductoNotFoundException {
+        if (repository.existsById(id)){
         String url = request.getRequestURL().toString().replace(request.getRequestURI(), "") + "/files/";
         String p = repository.findById(id)
                 .orElseThrow(() -> new ProductoNotFoundException("No se pudo eliminar")).getImg();
-        storageService.loadResource(p.replace(url,""));
         repository.deleteById(id);
+        storageService.loadResource(p.replace(url,""));}
+        else{
+            throw new ProductoNotFoundException("Producto no encontrado");
+        }
     }
 
     //Buscar todos los productos filtrando x tipo
