@@ -45,8 +45,8 @@ public class Orden {
     @PrePersist
     public void prePersist() {
         fechaCreacion = LocalDate.now();
-         mes = Integer.parseInt(fechaCreacion.format(DateTimeFormatter.ofPattern("MM")));
-         agno = fechaCreacion.format(DateTimeFormatter.ofPattern("yyyy"));
+        mes = Integer.parseInt(fechaCreacion.format(DateTimeFormatter.ofPattern("MM")));
+        agno = fechaCreacion.format(DateTimeFormatter.ofPattern("yyyy"));
     }
 
 }

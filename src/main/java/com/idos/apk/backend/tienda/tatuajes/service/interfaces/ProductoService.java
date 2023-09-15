@@ -13,19 +13,15 @@ public interface ProductoService {
 
     ProductoPageableResponse getAll(int pageNo, int pageSize);
 
-    ProductoOutDto getById(String id) throws RuntimeException;
+    ProductoOutDto getById(String id);
 
-    ProductoOutDto update(ProductoInDto producto, String id, HttpServletRequest request);
+    ProductoOutDto update(ProductoInDto producto, String id);
+
+    ProductoOutDto updateImg(MultipartFile file,
+                             HttpServletRequest request,
+                             String id);
 
     void delete(String id, HttpServletRequest request );
-
-//    ProductoPageableResponse getAllByTipo(int pageNo, int pageSize, String tipo);
-//
-//    ProductoPageableResponse findAllByEnable(boolean bol, int pageNo, int pageSize);//Buscar los productos en stock
-//
-//    ProductoPageableResponse findByPrecioBetween(int pageNo, int pageSize, double precioMinimo, double precioMaximo);
-
-    ///prueba
 
     ProductoPageableResponse filtrarProductos(FiltroProducto filtro, int pageNo, int pageSize);
 

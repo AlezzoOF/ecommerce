@@ -28,7 +28,6 @@ public class DetalleOrdenServiceImp implements DetalleOrdenService {
     private final DetalleMapper mapper;
 
 
-
     @Override
     @Transactional
     public DetalleOrdenInDto save(DetalleOrdenInDto objeto, String orden) throws ProductoNotFoundException {

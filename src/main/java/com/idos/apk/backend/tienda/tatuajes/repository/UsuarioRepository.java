@@ -3,7 +3,6 @@ package com.idos.apk.backend.tienda.tatuajes.repository;
 import com.idos.apk.backend.tienda.tatuajes.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-
 import java.util.Optional;
 
 
