@@ -109,13 +109,14 @@ public class ProductoServiceImp implements ProductoService {
         Producto p = repository.findById(id)
                 .orElseThrow(() -> new ProductoNotFoundException("Producto no pudo ser editado"));
         if (!file.isEmpty()) {
-            String url = saveImg(file, request);
             deleteImg(p.getImg(), request);
+            String url = saveImg(file, request);
             p.setImg(url);
         }
 
 
-        return mapper.productoToProductoDtoOut(p);
+
+        return mapper.productoToProductoDtoOut(repository.save(p));
     }
 
 
