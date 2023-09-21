@@ -56,18 +56,18 @@ public class ProductoController {
     }
 
     @PutMapping("/update/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ProductoOutDto update(@RequestBody @Validated ProductoInDto producto,
-                                 @PathVariable("id") String id) throws ProductoNotFoundException {
-        return service.update(producto, id);
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductoOutDto update(@RequestParam("nombre") String nombre,
+                                 @RequestParam("descripcion") String descripcion,
+                                 @RequestParam("precio") double precio,
+                                 @RequestParam("cantidad") int cantidad,
+                                 @RequestParam("tipo") String tipo,
+                                 @RequestParam("file") MultipartFile file,
+                                 @PathVariable("id")String id) throws DataAllreadyTaken {
 
-    }
+        ProductoInDto producto = new ProductoInDto(nombre, descripcion, precio, cantidad, tipo);
 
-    @PutMapping("/updateImg/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ProductoOutDto updateImg(@RequestParam("file") MultipartFile file,
-                                    @PathVariable("id") String id) throws ProductoNotFoundException {
-        return service.updateImg(file, request, id);
+        return service.update(producto, id, file, request);
 
     }
 
