@@ -88,11 +88,17 @@ public class ProductoServiceImp implements ProductoService {
     @Override
     @Transactional
     public ProductoOutDto update(ProductoInDto producto,
-                                 String id) throws ProductoNotFoundException {
+                                 String id, MultipartFile file,
+                                 HttpServletRequest request) throws ProductoNotFoundException {
         Producto p = repository.findById(id)
                 .orElseThrow(() -> new ProductoNotFoundException("Producto no pudo ser editado"));
         TipoProducto tipo = tipoProductoRepository.findByName(producto.getTipo())
                 .orElseGet(() -> tipoProductoRepository.save(new TipoProducto(producto.getTipo())));
+        if (!file.isEmpty()) {
+            deleteImg(p.getImg(), request);
+            String url = saveImg(file, request);
+            p.setImg(url);
+        }
         p.setTipo(tipo);
         p.setId(id);
         p.setNombre(producto.getNombre());
@@ -102,22 +108,6 @@ public class ProductoServiceImp implements ProductoService {
         return mapper.productoToProductoDtoOut(repository.save(p));
     }
 
-    @Override
-    public ProductoOutDto updateImg(MultipartFile file,
-                                    HttpServletRequest request,
-                                    String id) {
-        Producto p = repository.findById(id)
-                .orElseThrow(() -> new ProductoNotFoundException("Producto no pudo ser editado"));
-        if (!file.isEmpty()) {
-            deleteImg(p.getImg(), request);
-            String url = saveImg(file, request);
-            p.setImg(url);
-        }
-
-
-
-        return mapper.productoToProductoDtoOut(repository.save(p));
-    }
 
 
     //Borrar producto x id

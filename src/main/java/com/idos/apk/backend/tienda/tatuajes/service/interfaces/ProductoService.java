@@ -15,11 +15,7 @@ public interface ProductoService {
 
     ProductoOutDto getById(String id);
 
-    ProductoOutDto update(ProductoInDto producto, String id);
-
-    ProductoOutDto updateImg(MultipartFile file,
-                             HttpServletRequest request,
-                             String id);
+    ProductoOutDto update(ProductoInDto producto, String id, MultipartFile file, HttpServletRequest request);
 
     void delete(String id, HttpServletRequest request );
 
